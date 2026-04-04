@@ -4,6 +4,8 @@ import { loginWithGameAccount } from "../services/authService.js";
 import { createRecoveryToken, consumeRecoveryToken } from "../services/recoveryService.js";
 import { sendPasswordResetEmail } from "../services/mailService.js";
 import { config } from "../config.js";
+import { loginRateLimiter, forgotPasswordRateLimiter } from "../middleware/rateLimiters.js";
+import { normalizeLogin, normalizeEmail, isValidLogin, isValidEmail, isValidPassword } from "../services/validators.js";
 
 const router = Router();
 
@@ -13,10 +15,29 @@ router.get("/register", (req, res) => {
 
 router.post("/register", async (req, res) => {
   try {
-    const { login, email, password, confirmPassword } = req.body;
+    const login = normalizeLogin(req.body.login);
+    const email = normalizeEmail(req.body.email);
+    const password = String(req.body.password || "");
+    const confirmPassword = String(req.body.confirmPassword || "");
 
-    if (!login || !email || !password) {
-      return res.render("register", { error: "Completá usuario, email y contraseña." });
+    if (!login || !email || !password || !confirmPassword) {
+      return res.render("register", { error: "Completá todos los campos." });
+    }
+
+    if (!isValidLogin(login)) {
+      return res.render("register", {
+        error: "El usuario debe tener entre 3 y 16 caracteres y solo usar letras, números o guion bajo."
+      });
+    }
+
+    if (!isValidEmail(email)) {
+      return res.render("register", { error: "El email no es válido." });
+    }
+
+    if (!isValidPassword(password)) {
+      return res.render("register", {
+        error: "La contraseña debe tener entre 6 y 32 caracteres."
+      });
     }
 
     if (password !== confirmPassword) {
@@ -29,8 +50,17 @@ router.post("/register", async (req, res) => {
     }
 
     await createAccount(login, password, email);
-    return res.redirect("/login");
+
+    req.session.regenerate((err) => {
+      if (err) {
+        return res.redirect("/login");
+      }
+
+      req.session.user = { login };
+      return res.redirect("/account");
+    });
   } catch (error) {
+    console.error(error);
     return res.render("register", { error: "No se pudo crear la cuenta." });
   }
 });
@@ -39,9 +69,19 @@ router.get("/login", (req, res) => {
   res.render("login", { error: null });
 });
 
-router.post("/login", async (req, res) => {
+router.post("/login", loginRateLimiter, async (req, res) => {
   try {
-    const { login, password } = req.body;
+    const login = normalizeLogin(req.body.login);
+    const password = String(req.body.password || "");
+
+    if (!login || !password) {
+      return res.render("login", { error: "Completá usuario y contraseña." });
+    }
+
+    if (!isValidLogin(login)) {
+      return res.render("login", { error: "Usuario inválido." });
+    }
+
     const user = await loginWithGameAccount(login, password);
 
     if (!user) {
@@ -57,6 +97,7 @@ router.post("/login", async (req, res) => {
       return res.redirect("/account");
     });
   } catch (error) {
+    console.error(error);
     return res.render("login", { error: "No se pudo iniciar sesión." });
   }
 });
@@ -72,22 +113,21 @@ router.get("/forgot-password", (req, res) => {
   res.render("forgot-password", { message: null });
 });
 
-router.post("/forgot-password", async (req, res) => {
+router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
   try {
-    const { login } = req.body;
-
-    // 🔴 mensaje neutro SIEMPRE
     const genericMessage =
       "Si la cuenta existe, se envió un correo con instrucciones.";
 
-    if (!login) {
+    const login = normalizeLogin(req.body.login);
+
+    if (!login || !isValidLogin(login)) {
       return res.render("forgot-password", { message: genericMessage });
     }
 
     const account = await findAccountByLogin(login);
 
     if (account && account.email) {
-      const token = await createRecoveryToken(login);
+      const token = await createRecoveryToken(account.login);
 
       const resetUrl = `${config.baseUrl}/reset-password?token=${encodeURIComponent(token)}`;
 
@@ -100,7 +140,7 @@ router.post("/forgot-password", async (req, res) => {
 
     return res.render("forgot-password", { message: genericMessage });
   } catch (error) {
-    console.error(error);
+    console.error("forgot-password error:", error);
 
     return res.render("forgot-password", {
       message: "No se pudo procesar la solicitud."
@@ -115,13 +155,22 @@ router.get("/reset-password", (req, res) => {
 
 router.post("/reset-password", async (req, res) => {
   try {
-    const { token, password, confirmPassword } = req.body;
+    const token = String(req.body.token || "");
+    const password = String(req.body.password || "");
+    const confirmPassword = String(req.body.confirmPassword || "");
 
     if (!token) {
       return res.render("reset-password", { error: "Token inválido.", token: "" });
     }
 
-    if (!password || password !== confirmPassword) {
+    if (!isValidPassword(password)) {
+      return res.render("reset-password", {
+        error: "La contraseña debe tener entre 6 y 32 caracteres.",
+        token
+      });
+    }
+
+    if (password !== confirmPassword) {
       return res.render("reset-password", {
         error: "Las contraseñas no coinciden.",
         token
@@ -138,9 +187,9 @@ router.post("/reset-password", async (req, res) => {
     }
 
     await updateAccountPassword(accountName, password);
-
     return res.redirect("/login");
   } catch (error) {
+    console.error(error);
     return res.render("reset-password", {
       error: "No se pudo resetear la contraseña.",
       token: ""
