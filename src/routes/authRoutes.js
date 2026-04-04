@@ -40,19 +40,32 @@ router.get("/login", (req, res) => {
 });
 
 router.post("/login", async (req, res) => {
-  const { login, password } = req.body;
-  const user = await loginWithGameAccount(login, password);
+  try {
+    const { login, password } = req.body;
+    const user = await loginWithGameAccount(login, password);
 
-  if (!user) {
-    return res.render("login", { error: "Credenciales inválidas." });
+    if (!user) {
+      return res.render("login", { error: "Credenciales inválidas." });
+    }
+
+    req.session.regenerate((err) => {
+      if (err) {
+        return res.render("login", { error: "No se pudo iniciar sesión." });
+      }
+
+      req.session.user = user;
+      return res.redirect("/account");
+    });
+  } catch (error) {
+    return res.render("login", { error: "No se pudo iniciar sesión." });
   }
-
-  req.session.user = user;
-  return res.redirect("/account");
 });
 
 router.post("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/"));
+  req.session.destroy(() => {
+    res.clearCookie("l2web.sid");
+    return res.redirect("/");
+  });
 });
 
 router.get("/forgot-password", (req, res) => {

@@ -1,6 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 
+if (!process.env.SESSION_SECRET) {
+  throw new Error("SESSION_SECRET no está definido");
+}
+
 export const config = {
   port: Number(process.env.PORT || 3000),
   baseUrl: process.env.BASE_URL || `http://localhost:${process.env.PORT || 3000}`,
@@ -23,5 +27,6 @@ export const config = {
     pass: process.env.SMTP_PASS,
     from: process.env.SMTP_FROM
   },
-  tokenExpirationMinutes: Number(process.env.TOKEN_EXPIRATION_MINUTES || 30)
+  tokenExpirationMinutes: Number(process.env.TOKEN_EXPIRATION_MINUTES || 30),
+  isProduction: process.env.NODE_ENV === "production"
 };
