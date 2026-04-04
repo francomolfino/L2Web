@@ -1,69 +1,54 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>L2Web</title>
-</head>
-<body>
-  <h1>L2Web</h1>
+<%- include("partials/header", { title: "Inicio" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages", { error: null, message: null }) %>
 
-  <p>
-    Estado del servidor:
-    <% if (status.online) { %>
-      <strong>Online</strong>
-    <% } else { %>
-      <strong>Offline</strong>
-    <% } %>
-  </p>
+<h1>L2Web</h1>
 
-  <p><strong>Players online:</strong> <%= onlinePlayers %></p>
-
-  <% if (user) { %>
-    <p>Sesión iniciada como <strong><%= user.login %></strong></p>
-    <p><a href="/account">Ir a mi cuenta</a></p>
-    <form method="post" action="/logout">
-      <button type="submit">Cerrar sesión</button>
-    </form>
+<p>
+  Estado del servidor:
+  <% if (status.online) { %>
+    <strong>Online</strong>
   <% } else { %>
-    <p><a href="/login">Iniciar sesión</a></p>
-    <p><a href="/register">Registrarse</a></p>
-    <p><a href="/forgot-password">Recuperar contraseña</a></p>
+    <strong>Offline</strong>
   <% } %>
+</p>
 
-  <h2>Top 5 PvP</h2>
-  <% if (!topPvp.length) { %>
-    <p>No hay datos.</p>
-  <% } else { %>
-    <ol>
-      <% topPvp.forEach(row => { %>
-        <li>
-          <strong><%= row.char_name %></strong>
-          - PvP: <%= row.pvpkills %>
-          - Level: <%= row.level %>
-          - Clase: <%= row.class_name %>
-          - Clan: <%= row.clan_name %>
-        </li>
-      <% }) %>
-    </ol>
-  <% } %>
+<p><strong>Players online:</strong> <%= onlinePlayers %></p>
 
-  <h2>Top 5 PK</h2>
-  <% if (!topPk.length) { %>
-    <p>No hay datos.</p>
-  <% } else { %>
-    <ol>
-      <% topPk.forEach(row => { %>
-        <li>
-          <strong><%= row.char_name %></strong>
-          - PK: <%= row.pkkills %>
-          - Level: <%= row.level %>
-          - Clase: <%= row.class_name %>
-          - Clan: <%= row.clan_name %>
-        </li>
-      <% }) %>
-    </ol>
-  <% } %>
+<h2>Top 5 PvP</h2>
+<% if (!topPvp.length) { %>
+  <p>No hay datos.</p>
+<% } else { %>
+  <ol>
+    <% topPvp.forEach(row => { %>
+      <li>
+        <strong><%= row.char_name %></strong>
+        - PvP: <%= row.pvpkills %>
+        - Level: <%= row.level %>
+        - Clase: <%= row.class_name %>
+        - Clan: <%= row.clan_name %>
+      </li>
+    <% }) %>
+  </ol>
+<% } %>
 
-  <p><a href="/rankings">Ver rankings detallados</a></p>
-</body>
-</html>
+<h2>Top 5 PK</h2>
+<% if (!topPk.length) { %>
+  <p>No hay datos.</p>
+<% } else { %>
+  <ol>
+    <% topPk.forEach(row => { %>
+      <li>
+        <strong><%= row.char_name %></strong>
+        - PK: <%= row.pkkills %>
+        - Level: <%= row.level %>
+        - Clase: <%= row.class_name %>
+        - Clan: <%= row.clan_name %>
+      </li>
+    <% }) %>
+  </ol>
+<% } %>
+
+<p><a href="/rankings">Ver rankings detallados</a></p>
+
+<%- include("partials/footer") %>

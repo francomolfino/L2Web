@@ -1,12 +1,7 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title><%= title %></title>
-</head>
-<body>
-  <h1><%= title %></h1>
-  <p><%= message %></p>
-  <p><a href="/">Volver al inicio</a></p>
-</body>
-</html>
+<%- include("partials/header", { title }) %>
+<%- include("partials/nav") %>
+
+<h1><%= title %></h1>
+<p><%= message %></p>
+
+<%- include("partials/footer") %>

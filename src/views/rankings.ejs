@@ -1,48 +1,43 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>Rankings</title>
-</head>
-<body>
-  <h1>Rankings</h1>
+<%- include("partials/header", { title: "Rankings" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages", { error: null, message: null }) %>
 
-  <h2>Ranking PvP</h2>
-  <% if (!topPvp.length) { %>
-    <p>No hay datos.</p>
-  <% } else { %>
-    <ol>
-      <% topPvp.forEach(row => { %>
-        <li>
-          <strong><%= row.char_name %></strong>
-          - PvP: <%= row.pvpkills %>
-          - PK: <%= row.pkkills %>
-          - Level: <%= row.level %>
-          - Clase: <%= row.class_name %>
-          - Clan: <%= row.clan_name %>
-        </li>
-      <% }) %>
-    </ol>
-  <% } %>
+<h1>Rankings</h1>
 
-  <h2>Ranking PK</h2>
-  <% if (!topPk.length) { %>
-    <p>No hay datos.</p>
-  <% } else { %>
-    <ol>
-      <% topPk.forEach(row => { %>
-        <li>
-          <strong><%= row.char_name %></strong>
-          - PK: <%= row.pkkills %>
-          - PvP: <%= row.pvpkills %>
-          - Level: <%= row.level %>
-          - Clase: <%= row.class_name %>
-          - Clan: <%= row.clan_name %>
-        </li>
-      <% }) %>
-    </ol>
-  <% } %>
+<h2>Ranking PvP</h2>
+<% if (!topPvp.length) { %>
+  <p>No hay datos.</p>
+<% } else { %>
+  <ol>
+    <% topPvp.forEach(row => { %>
+      <li>
+        <strong><%= row.char_name %></strong>
+        - PvP: <%= row.pvpkills %>
+        - PK: <%= row.pkkills %>
+        - Level: <%= row.level %>
+        - Clase: <%= row.class_name %>
+        - Clan: <%= row.clan_name %>
+      </li>
+    <% }) %>
+  </ol>
+<% } %>
 
-  <p><a href="/">Volver al inicio</a></p>
-</body>
-</html>
+<h2>Ranking PK</h2>
+<% if (!topPk.length) { %>
+  <p>No hay datos.</p>
+<% } else { %>
+  <ol>
+    <% topPk.forEach(row => { %>
+      <li>
+        <strong><%= row.char_name %></strong>
+        - PK: <%= row.pkkills %>
+        - PvP: <%= row.pvpkills %>
+        - Level: <%= row.level %>
+        - Clase: <%= row.class_name %>
+        - Clan: <%= row.clan_name %>
+      </li>
+    <% }) %>
+  </ol>
+<% } %>
+
+<%- include("partials/footer") %>

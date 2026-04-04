@@ -1,37 +1,31 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="utf-8">
-  <title>Registro</title>
-</head>
-<body>
-  <h1>Crear cuenta</h1>
+<%- include("partials/header", { title: "Registro" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages", { error, message: null }) %>
 
-  <% if (error) { %>
-    <p><%= error %></p>
-  <% } %>
+<h1>Crear cuenta</h1>
 
-  <form method="post" action="/register">
-    <div>
-      <label>Usuario</label>
-      <input type="text" name="login" required>
-    </div>
-    <div>
-      <label>Contraseña</label>
-      <input type="password" name="password" required>
-    </div>
-    <div>
-      <label>Confirmar contraseña</label>
-      <input type="password" name="confirmPassword" required>
-    </div>
-    <div>
-      <label>Email</label>
-      <input type="email" name="email" required>
-    </div>
-    <button type="submit">Crear cuenta</button>
-  </form>
+<form method="post" action="/register">
+  <div>
+    <label>Usuario</label>
+    <input type="text" name="login" required>
+  </div>
 
-  <p><a href="/login">Ya tengo cuenta</a></p>
-  <p><a href="/">Volver</a></p>
-</body>
-</html>
+  <div>
+    <label>Email</label>
+    <input type="email" name="email" required>
+  </div>
+
+  <div>
+    <label>Contraseña</label>
+    <input type="password" name="password" required>
+  </div>
+
+  <div>
+    <label>Confirmar contraseña</label>
+    <input type="password" name="confirmPassword" required>
+  </div>
+
+  <button type="submit">Crear cuenta</button>
+</form>
+
+<%- include("partials/footer") %>

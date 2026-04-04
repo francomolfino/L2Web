@@ -1,0 +1,18 @@
+<nav>
+  <a href="/">Inicio</a>
+  <a href="/rankings">Rankings</a>
+
+  <% if (user) { %>
+    <a href="/account">Mi cuenta</a>
+    <form method="post" action="/logout" style="display:inline;">
+      <button type="submit">Cerrar sesión</button>
+    </form>
+    <span>Conectado como <strong><%= user.login %></strong></span>
+  <% } else { %>
+    <a href="/login">Iniciar sesión</a>
+    <a href="/register">Registrarse</a>
+    <a href="/forgot-password">Recuperar contraseña</a>
+  <% } %>
+</nav>
+
+<hr>
