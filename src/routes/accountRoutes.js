@@ -7,6 +7,7 @@ import { getServerStatus } from "../services/serverStatusService.js";
 import { isValidPassword } from "../services/validators.js";
 import { writeAuditLog } from "../services/auditService.js";
 import { getClientIp } from "../services/requestService.js";
+import { invalidateRecoveryTokens } from "../services/recoveryService.js";
 
 const router = Router();
 
@@ -101,6 +102,8 @@ router.post("/change-password", requireAuth, async (req, res) => {
 
     await updateAccountPassword(login, newPassword);
 
+    await invalidateRecoveryTokens(login);
+
     await writeAuditLog({
       accountName: login,
       actionName: "CHANGE_PASSWORD_SUCCESS",
@@ -108,7 +111,10 @@ router.post("/change-password", requireAuth, async (req, res) => {
       details: "Password changed"
     });
 
-    return res.redirect("/account");
+    req.session.destroy(() => {
+      res.clearCookie("l2web.sid");
+      return res.redirect("/login");
+    });
   } catch (error) {
     console.error(error);
 

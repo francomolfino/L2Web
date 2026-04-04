@@ -1,7 +1,12 @@
 import { Router } from "express";
 import { createAccount, findAccountByLogin, updateAccountPassword } from "../services/accountService.js";
 import { loginWithGameAccount } from "../services/authService.js";
-import { createRecoveryToken, consumeRecoveryToken } from "../services/recoveryService.js";
+import {
+  createRecoveryToken,
+  consumeRecoveryToken,
+  invalidateRecoveryTokens,
+  isRecoveryTokenValid
+} from "../services/recoveryService.js";
 import { sendPasswordResetEmail } from "../services/mailService.js";
 import { config } from "../config.js";
 import {
@@ -272,8 +277,42 @@ router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
   }
 });
 
-router.get("/reset-password", (req, res) => {
-  res.render("reset-password", { error: null, token: req.query.token || "" });
+router.get("/reset-password", async (req, res) => {
+  try {
+    const token = String(req.query.token || "");
+
+    if (!token) {
+      return res.render("reset-password", {
+        error: "Token inválido.",
+        token: "",
+        isValidToken: false
+      });
+    }
+
+    const valid = await isRecoveryTokenValid(token);
+
+    if (!valid) {
+      return res.render("reset-password", {
+        error: "Este enlace ya fue usado o venció.",
+        token: "",
+        isValidToken: false
+      });
+    }
+
+    return res.render("reset-password", {
+      error: null,
+      token,
+      isValidToken: true
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.render("reset-password", {
+      error: "No se pudo validar el enlace.",
+      token: "",
+      isValidToken: false
+    });
+  }
 });
 
 router.post("/reset-password", async (req, res) => {
@@ -335,6 +374,8 @@ router.post("/reset-password", async (req, res) => {
     }
 
     await updateAccountPassword(accountName, password);
+
+    await invalidateRecoveryTokens(accountName);
 
     await writeAuditLog({
       accountName,
