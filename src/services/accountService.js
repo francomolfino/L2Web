@@ -3,17 +3,13 @@ import { hashGamePassword } from "./passwordAdapter.js";
 
 export async function findAccountByLogin(login) {
   const rows = await db.query(
-    "SELECT login, password, email, accessLevel, lastactive FROM accounts WHERE login = ? LIMIT 1",
+    `SELECT login, password, email, created_time, accessLevel, lastactive
+     FROM accounts
+     WHERE login = ?
+     LIMIT 1`,
     [login]
   );
-  return rows[0] || null;
-}
 
-export async function findAccountByEmail(email) {
-  const rows = await db.query(
-    "SELECT login, password, email, accessLevel, lastactive FROM accounts WHERE email = ? LIMIT 1",
-    [email]
-  );
   return rows[0] || null;
 }
 

@@ -16,6 +16,10 @@
     <% } %>
   </p>
 
+  <h2>Datos de la cuenta</h2>
+  <p><strong>Email:</strong> <%= account?.email || "-" %></p>
+  <p><strong>Fecha de creación:</strong> <%= account?.created_time || "-" %></p>
+
   <p><a href="/change-password">Cambiar contraseña</a></p>
 
   <form method="post" action="/logout">
@@ -27,16 +31,21 @@
   <% if (!characters || !characters.length) { %>
     <p>No hay personajes en esta cuenta.</p>
   <% } else { %>
-    <ul>
-      <% characters.forEach(char => { %>
-        <li>
-          <strong><%= char.char_name %></strong>
-          - lvl <%= char.level %>
-          - classId <%= char.classid %>
-          - <%= char.online ? "Online" : "Offline" %>
-        </li>
-      <% }) %>
-    </ul>
+    <% characters.forEach(char => { %>
+      <hr>
+      <p><strong>Nombre:</strong> <%= char.char_name %></p>
+      <p><strong>Título:</strong> <%= char.title || "-" %></p>
+      <p><strong>Level:</strong> <%= char.level %></p>
+      <p><strong>Fecha de creación:</strong> <%= char.createDate || "-" %></p>
+      <p><strong>Clase:</strong> <%= char.class_name %></p>
+      <p><strong>Estado:</strong> <%= char.online_label %></p>
+      <p><strong>Clan:</strong> <%= char.clan_name !== "-" ? char.clan_name : "Sin clan" %></p>
+      <p><strong>Alianza:</strong> <%= char.ally_name !== "-" ? char.ally_name : "Sin alianza" %></p>
+      <p><strong>PvP:</strong> <%= char.pvpkills %></p>
+      <p><strong>PK:</strong> <%= char.pkkills %></p>
+      <p><strong>Karma:</strong> <%= char.karma %></p>
+      <p><strong>Tiempo online:</strong> <%= char.online_time_formatted || "-" %></p>
+    <% }) %>
   <% } %>
 
   <p><a href="/">Volver al inicio</a></p>

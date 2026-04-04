@@ -2,35 +2,12 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>L2Web</title>
+  <title>Rankings</title>
 </head>
 <body>
-  <h1>L2Web</h1>
+  <h1>Rankings</h1>
 
-  <p>
-    Estado del servidor:
-    <% if (status.online) { %>
-      <strong>Online</strong>
-    <% } else { %>
-      <strong>Offline</strong>
-    <% } %>
-  </p>
-
-  <p><strong>Players online:</strong> <%= onlinePlayers %></p>
-
-  <% if (user) { %>
-    <p>Sesión iniciada como <strong><%= user.login %></strong></p>
-    <p><a href="/account">Ir a mi cuenta</a></p>
-    <form method="post" action="/logout">
-      <button type="submit">Cerrar sesión</button>
-    </form>
-  <% } else { %>
-    <p><a href="/login">Iniciar sesión</a></p>
-    <p><a href="/register">Registrarse</a></p>
-    <p><a href="/forgot-password">Recuperar contraseña</a></p>
-  <% } %>
-
-  <h2>Top 5 PvP</h2>
+  <h2>Ranking PvP</h2>
   <% if (!topPvp.length) { %>
     <p>No hay datos.</p>
   <% } else { %>
@@ -39,22 +16,6 @@
         <li>
           <strong><%= row.char_name %></strong>
           - PvP: <%= row.pvpkills %>
-          - Level: <%= row.level %>
-          - Clase: <%= row.class_name %>
-          - Clan: <%= row.clan_name %>
-        </li>
-      <% }) %>
-    </ol>
-  <% } %>
-
-  <h2>Top 5 PK</h2>
-  <% if (!topPk.length) { %>
-    <p>No hay datos.</p>
-  <% } else { %>
-    <ol>
-      <% topPk.forEach(row => { %>
-        <li>
-          <strong><%= row.char_name %></strong>
           - PK: <%= row.pkkills %>
           - Level: <%= row.level %>
           - Clase: <%= row.class_name %>
@@ -64,6 +25,24 @@
     </ol>
   <% } %>
 
-  <p><a href="/rankings">Ver rankings detallados</a></p>
+  <h2>Ranking PK</h2>
+  <% if (!topPk.length) { %>
+    <p>No hay datos.</p>
+  <% } else { %>
+    <ol>
+      <% topPk.forEach(row => { %>
+        <li>
+          <strong><%= row.char_name %></strong>
+          - PK: <%= row.pkkills %>
+          - PvP: <%= row.pvpkills %>
+          - Level: <%= row.level %>
+          - Clase: <%= row.class_name %>
+          - Clan: <%= row.clan_name %>
+        </li>
+      <% }) %>
+    </ol>
+  <% } %>
+
+  <p><a href="/">Volver al inicio</a></p>
 </body>
 </html>

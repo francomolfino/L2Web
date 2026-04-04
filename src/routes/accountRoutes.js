@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { requireAuth } from "../middleware/requireAuth.js";
 import { getCharactersByAccount } from "../services/characterService.js";
-import { updateAccountPassword } from "../services/accountService.js";
+import { updateAccountPassword, findAccountByLogin } from "../services/accountService.js";
 import { loginWithGameAccount } from "../services/authService.js";
 import { getServerStatus } from "../services/serverStatusService.js";
 import { isValidPassword } from "../services/validators.js";
@@ -12,11 +12,13 @@ const router = Router();
 
 router.get("/account", requireAuth, async (req, res) => {
   const login = req.session.user.login;
+  const account = await findAccountByLogin(login);
   const characters = await getCharactersByAccount(login);
   const status = await getServerStatus();
 
   res.render("account", {
     login,
+    account,
     characters: characters || [],
     status,
     message: null,
