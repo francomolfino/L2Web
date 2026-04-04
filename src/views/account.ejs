@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Mi cuenta</title>
+</head>
+<body>
+  <h1>Cuenta: <%= login %></h1>
+
+  <p>
+    Estado del servidor:
+    <% if (status.online) { %>
+      <strong>Online</strong>
+    <% } else { %>
+      <strong>Offline</strong>
+    <% } %>
+  </p>
+
+  <p><a href="/change-password">Cambiar contraseña</a></p>
+
+  <form method="post" action="/logout">
+    <button type="submit">Cerrar sesión</button>
+  </form>
+
+  <h2>Personajes</h2>
+
+  <% if (!characters || !characters.length) { %>
+    <p>No hay personajes en esta cuenta.</p>
+  <% } else { %>
+    <ul>
+      <% characters.forEach(char => { %>
+        <li>
+          <strong><%= char.char_name %></strong>
+          - lvl <%= char.level %>
+          - classId <%= char.classid %>
+          - <%= char.online ? "Online" : "Offline" %>
+        </li>
+      <% }) %>
+    </ul>
+  <% } %>
+
+  <p><a href="/">Volver al inicio</a></p>
+</body>
+</html>

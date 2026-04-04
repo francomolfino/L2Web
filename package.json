@@ -1,0 +1,17 @@
+{
+  "name": "l2-web",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/app.js",
+    "start": "node src/app.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.0",
+    "ejs": "^5.0.1",
+    "express": "^5.2.1",
+    "express-session": "^1.19.0",
+    "mariadb": "^3.5.2",
+    "nodemailer": "^8.0.4"
+  }
+}

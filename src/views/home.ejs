@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>L2 Web</title>
+</head>
+<body>
+  <h1>L2 Web</h1>
+
+  <p>
+    Estado del servidor:
+    <% if (status.online) { %>
+      <strong>Online</strong>
+    <% } else { %>
+      <strong>Offline</strong>
+    <% } %>
+  </p>
+
+  <% if (user) { %>
+    <p>Sesión iniciada como <strong><%= user.login %></strong></p>
+    <p><a href="/account">Ir a mi cuenta</a></p>
+    <form method="post" action="/logout">
+      <button type="submit">Cerrar sesión</button>
+    </form>
+  <% } else { %>
+    <p><a href="/login">Iniciar sesión</a></p>
+    <p><a href="/register">Registrarse</a></p>
+    <p><a href="/forgot-password">Recuperar contraseña</a></p>
+  <% } %>
+</body>
+</html>
