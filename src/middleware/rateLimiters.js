@@ -15,3 +15,11 @@ export const forgotPasswordRateLimiter = rateLimit({
   legacyHeaders: false,
   message: "Demasiadas solicitudes de recuperación. Probá de nuevo más tarde."
 });
+
+export const registerRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  limit: 5,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: "Demasiados intentos de registro. Probá de nuevo más tarde."
+});
