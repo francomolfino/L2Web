@@ -149,7 +149,7 @@ router.post("/register", registerRateLimiter, async (req, res) => {
 
       return req.session.save((saveErr) => {
         if (saveErr) console.error(saveErr);
-        return res.redirect("/account");
+          return res.redirect("/");
       });
     });
   } catch (error) {
@@ -235,7 +235,7 @@ router.post("/login", loginRateLimiter, async (req, res) => {
 
       return req.session.save((saveErr) => {
         if (saveErr) console.error(saveErr);
-        return res.redirect("/account");
+        return res.redirect("/");
       });
     });
   } catch (error) {
