@@ -12,23 +12,30 @@ import { invalidateRecoveryTokens } from "../services/recoveryService.js";
 const router = Router();
 
 router.get("/account", requireAuth, async (req, res) => {
-  const login = req.session.user.login;
-  const account = await findAccountByLogin(login);
-  const characters = await getCharactersByAccount(login);
-  const status = await getServerStatus();
+  try {
+    const login = req.session.user.login;
+    const account = await findAccountByLogin(login);
+    const characters = await getCharactersByAccount(login);
+    const status = await getServerStatus();
 
-  res.render("account", {
-    login,
-    account,
-    characters: characters || [],
-    status,
-    message: null,
-    error: null
-  });
+    return res.render("account", {
+      login,
+      account,
+      characters: characters || [],
+      status
+    });
+  } catch (error) {
+    console.error(error);
+    req.session.error = "No se pudo cargar la cuenta.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/");
+    });
+  }
 });
 
 router.get("/change-password", requireAuth, (req, res) => {
-  res.render("change-password", { error: null });
+  return res.render("change-password");
 });
 
 router.post("/change-password", requireAuth, async (req, res) => {
@@ -48,12 +55,8 @@ router.post("/change-password", requireAuth, async (req, res) => {
       });
 
       req.session.error = "Completá todos los campos.";
-      req.session.save((err) => {
-        if (err) {
-          console.error(err);
-          return res.redirect("/change-password");
-        }
-
+      return req.session.save((err) => {
+        if (err) console.error(err);
         return res.redirect("/change-password");
       });
     }
@@ -67,12 +70,8 @@ router.post("/change-password", requireAuth, async (req, res) => {
       });
 
       req.session.error = "La nueva contraseña debe tener entre 6 y 32 caracteres.";
-      req.session.save((err) => {
-        if (err) {
-          console.error(err);
-          return res.redirect("/change-password");
-        }
-
+      return req.session.save((err) => {
+        if (err) console.error(err);
         return res.redirect("/change-password");
       });
     }
@@ -86,12 +85,8 @@ router.post("/change-password", requireAuth, async (req, res) => {
       });
 
       req.session.error = "Las contraseñas no coinciden.";
-      req.session.save((err) => {
-        if (err) {
-          console.error(err);
-          return res.redirect("/change-password");
-        }
-
+      return req.session.save((err) => {
+        if (err) console.error(err);
         return res.redirect("/change-password");
       });
     }
@@ -105,12 +100,8 @@ router.post("/change-password", requireAuth, async (req, res) => {
       });
 
       req.session.error = "La nueva contraseña no puede ser igual a la actual.";
-      req.session.save((err) => {
-        if (err) {
-          console.error(err);
-          return res.redirect("/change-password");
-        }
-
+      return req.session.save((err) => {
+        if (err) console.error(err);
         return res.redirect("/change-password");
       });
     }
@@ -126,18 +117,13 @@ router.post("/change-password", requireAuth, async (req, res) => {
       });
 
       req.session.error = "La contraseña actual es incorrecta.";
-      req.session.save((err) => {
-        if (err) {
-          console.error(err);
-          return res.redirect("/change-password");
-        }
-
+      return req.session.save((err) => {
+        if (err) console.error(err);
         return res.redirect("/change-password");
       });
     }
 
     await updateAccountPassword(login, newPassword);
-
     await invalidateRecoveryTokens(login);
 
     await writeAuditLog({
@@ -147,10 +133,17 @@ router.post("/change-password", requireAuth, async (req, res) => {
       details: "Password changed"
     });
 
-    req.session.destroy(() => {
-      res.clearCookie("l2web.sid");
-      req.session.message = "Contraseña actualizada correctamente";
-      return res.redirect("/login");
+    return req.session.regenerate((err) => {
+      if (err) {
+        console.error(err);
+        return res.redirect("/login");
+      }
+
+      req.session.message = "Contraseña actualizada correctamente.";
+      return req.session.save((saveErr) => {
+        if (saveErr) console.error(saveErr);
+        return res.redirect("/login");
+      });
     });
   } catch (error) {
     console.error(error);
@@ -162,23 +155,12 @@ router.post("/change-password", requireAuth, async (req, res) => {
       details: "Unhandled exception"
     });
 
-    return res.render("change-password", {
-      error: "No se pudo cambiar la contraseña."
+    req.session.error = "No se pudo cambiar la contraseña.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/change-password");
     });
   }
-});
-
-router.get("/test-message", (req, res) => {
-  req.session.message = "Mensaje de prueba";
-
-  req.session.save((err) => {
-    if (err) {
-      console.error(err);
-      return res.redirect("/");
-    }
-
-    return res.redirect("/");
-  });
 });
 
 export default router;

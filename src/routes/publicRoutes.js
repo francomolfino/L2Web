@@ -15,22 +15,20 @@ router.get("/", async (req, res) => {
     const topPvp = await getTopPvp(5);
     const topPk = await getTopPk(5);
 
-    res.render("home", {
+    return res.render("home", {
       status,
       onlinePlayers,
       topPvp,
-      topPk,
-      user: req.session?.user || null
+      topPk
     });
   } catch (error) {
     console.error("HOME ERROR:", error);
 
-    res.render("home", {
+    return res.render("home", {
       status: { online: false },
       onlinePlayers: 0,
       topPvp: [],
-      topPk: [],
-      user: null
+      topPk: []
     });
   }
 });
@@ -40,18 +38,16 @@ router.get("/rankings", async (req, res) => {
     const topPvp = await getTopPvp(50);
     const topPk = await getTopPk(50);
 
-    res.render("rankings", {
+    return res.render("rankings", {
       topPvp,
-      topPk,
-      user: req.session?.user || null
+      topPk
     });
   } catch (error) {
     console.error("RANKINGS ERROR:", error);
 
-    res.render("rankings", {
+    return res.render("rankings", {
       topPvp: [],
-      topPk: [],
-      user: null
+      topPk: []
     });
   }
 });
