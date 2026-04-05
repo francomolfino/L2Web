@@ -15,7 +15,7 @@
 
 <h2>Datos de la cuenta</h2>
 <p><strong>Email:</strong> <%= account?.email || "-" %></p>
-<p><strong>Fecha de creación:</strong> <%= account?.created_time || "-" %></p>
+<p><strong>Fecha de creación:</strong> <%= account?.formattedCreatedTime || "-" %></p>
 
 <p><a href="/change-password">Cambiar contraseña</a></p>
 
@@ -29,7 +29,7 @@
     <p><strong>Nombre:</strong> <%= char.char_name %></p>
     <p><strong>Título:</strong> <%= char.title || "-" %></p>
     <p><strong>Level:</strong> <%= char.level %></p>
-    <p><strong>Fecha de creación:</strong> <%= char.createDate || "-" %></p>
+    <p><strong>Fecha de creación:</strong> <%= char.formattedCreateDate || "-" %></p>
     <p><strong>Clase:</strong> <%= char.class_name %></p>
     <p><strong>Estado:</strong> <%= char.online_label %></p>
     <p><strong>Clan:</strong> <%= char.clan_name !== "-" ? char.clan_name : "Sin clan" %></p>

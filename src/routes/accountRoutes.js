@@ -8,14 +8,25 @@ import { isValidPassword } from "../services/validators.js";
 import { writeAuditLog } from "../services/auditService.js";
 import { getClientIp } from "../services/requestService.js";
 import { invalidateRecoveryTokens } from "../services/recoveryService.js";
+import { formatDate, formatDateTime } from "../utils/dateUtils.js";
 
 const router = Router();
 
 router.get("/account", requireAuth, async (req, res) => {
   try {
     const login = req.session.user.login;
-    const account = await findAccountByLogin(login);
-    const characters = await getCharactersByAccount(login);
+    const accountRaw = await findAccountByLogin(login);
+    const account = accountRaw
+      ? {
+          ...accountRaw,
+          formattedCreatedTime: formatDate(accountRaw.created_time)
+        }
+      : null;
+    const charactersRaw = await getCharactersByAccount(login);
+    const characters = (charactersRaw || []).map((char) => ({
+      ...char,
+      formattedCreateDate: formatDateTime(char.createDate)
+    }));
     const status = await getServerStatus();
 
     return res.render("account", {
