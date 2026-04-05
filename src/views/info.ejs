@@ -1,0 +1,48 @@
+<%- include("partials/header", { title: "Información del servidor" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages") %>
+
+<h1>Información del servidor</h1>
+
+<h2>General</h2>
+<p><strong>Nombre:</strong> <%= serverInfo.name %></p>
+<p><strong>Crónica:</strong> <%= serverInfo.chronicle %></p>
+
+<hr>
+
+<h2>Rates</h2>
+<p><strong>EXP:</strong> x<%= serverInfo.rates.exp %></p>
+<p><strong>SP:</strong> x<%= serverInfo.rates.sp %></p>
+<p><strong>Adena:</strong> x<%= serverInfo.rates.adena %></p>
+<p><strong>Drop:</strong> x<%= serverInfo.rates.drop %></p>
+<p><strong>Spoil:</strong> x<%= serverInfo.rates.spoil %></p>
+<p><strong>Quest:</strong> x<%= serverInfo.rates.quest %></p>
+
+<hr>
+
+<h2>Configuración</h2>
+<p><strong>Max enchant weapon:</strong> <%= serverInfo.settings.maxEnchantWeapon %></p>
+<p><strong>Max enchant armor:</strong> <%= serverInfo.settings.maxEnchantArmor %></p>
+<p><strong>Max enchant jewelry:</strong> <%= serverInfo.settings.maxEnchantJewelry %></p>
+<p><strong>Safe enchant weapon:</strong> <%= serverInfo.settings.safeEnchantWeapon %></p>
+<p><strong>Safe enchant armor:</strong> <%= serverInfo.settings.safeEnchantArmor %></p>
+<p><strong>Safe enchant jewelry:</strong> <%= serverInfo.settings.safeEnchantJewelry %></p>
+<p><strong>Auto learn skills:</strong> <%= serverInfo.settings.autoLearnSkills ? "Sí" : "No" %></p>
+<p><strong>Subclass sin quest:</strong> <%= serverInfo.settings.subclassWithoutQuest ? "Sí" : "No" %></p>
+<p><strong>Buffer habilitado:</strong> <%= serverInfo.settings.bufferEnabled ? "Sí" : "No" %></p>
+<p><strong>GM Shop habilitado:</strong> <%= serverInfo.settings.gmShopEnabled ? "Sí" : "No" %></p>
+
+<hr>
+
+<h2>Información adicional</h2>
+<% if (!serverInfo.extra || !serverInfo.extra.length) { %>
+  <p>No hay información adicional.</p>
+<% } else { %>
+  <ul>
+    <% serverInfo.extra.forEach(item => { %>
+      <li><%= item %></li>
+    <% }) %>
+  </ul>
+<% } %>
+
+<%- include("partials/footer") %>

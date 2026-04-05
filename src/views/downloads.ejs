@@ -1,0 +1,26 @@
+<%- include("partials/header", { title: "Descargas" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages") %>
+
+<h1>Descargas</h1>
+
+<p>Desde esta sección podés descargar los archivos necesarios para jugar.</p>
+
+<h2>Archivos disponibles</h2>
+
+<ul>
+  <li>
+    <strong><%= downloads.client.label %>:</strong>
+    <a href="<%= downloads.client.url %>"><%= downloads.client.url %></a>
+  </li>
+  <li>
+    <strong><%= downloads.patch.label %>:</strong>
+    <a href="<%= downloads.patch.url %>"><%= downloads.patch.url %></a>
+  </li>
+  <li>
+    <strong><%= downloads.updater.label %>:</strong>
+    <a href="<%= downloads.updater.url %>"><%= downloads.updater.url %></a>
+  </li>
+</ul>
+
+<%- include("partials/footer") %>

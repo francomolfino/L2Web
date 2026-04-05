@@ -5,6 +5,7 @@ import {
   getTopPvp,
   getTopPk
 } from "../services/statsService.js";
+import { serverInfo } from "../data/serverInfo.js";
 
 const router = Router();
 
@@ -50,6 +51,18 @@ router.get("/rankings", async (req, res) => {
       topPk: []
     });
   }
+});
+
+router.get("/downloads", (req, res) => {
+  return res.render("downloads", {
+    downloads: serverInfo.downloads
+  });
+});
+
+router.get("/info", (req, res) => {
+  return res.render("info", {
+    serverInfo
+  });
 });
 
 export default router;
