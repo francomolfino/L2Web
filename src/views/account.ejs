@@ -1,44 +1,77 @@
 <%- include("partials/header", { title: "Mi cuenta" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Cuenta: <%= account?.login || login %></h1>
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="eyebrow">Panel de cuenta</span>
+    <h1 class="page-title">Cuenta: <%= account?.login || login %></h1>
+    <p class="page-lead">Revisá los datos principales de la cuenta, el estado del servidor y el resumen de personajes asociados.</p>
 
-<p>
-  Estado del servidor:
-  <% if (status && status.online) { %>
-    <strong>Online</strong>
+    <div class="hero-meta">
+      <span class="status-pill <%= status && status.online ? "status-online" : "status-offline" %>">
+        <%= status && status.online ? "Servidor online" : "Servidor offline" %>
+      </span>
+      <span class="meta-pill"><strong>Email:</strong> <%= account?.email || "-" %></span>
+    </div>
+  </div>
+</section>
+
+<section class="detail-grid">
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>Datos de la cuenta</h2>
+    </div>
+    <ul class="detail-list">
+      <li><strong>Usuario</strong><span><%= account?.login || login %></span></li>
+      <li><strong>Email</strong><span><%= account?.email || "-" %></span></li>
+      <li><strong>Fecha de creación</strong><span><%= account?.formattedCreatedTime || "-" %></span></li>
+    </ul>
+    <div class="content-actions">
+      <a class="button-link button-link-secondary" href="/change-password">Cambiar contraseña</a>
+    </div>
+  </article>
+
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>Resumen</h2>
+    </div>
+    <ul class="detail-list">
+      <li><strong>Estado del servidor</strong><span><%= status && status.online ? "Online" : "Offline" %></span></li>
+      <li><strong>Personajes</strong><span><%= characters?.length || 0 %></span></li>
+      <li><strong>Acceso</strong><span>Cuenta autenticada</span></li>
+    </ul>
+  </article>
+</section>
+
+<section class="stack">
+  <div class="section-heading">
+    <h2>Personajes</h2>
+  </div>
+
+  <% if (!characters || !characters.length) { %>
+    <div class="empty-state">No hay personajes en esta cuenta.</div>
   <% } else { %>
-    <strong>Offline</strong>
+    <div class="char-grid">
+      <% characters.forEach(char => { %>
+        <article class="char-card">
+          <h3><%= char.char_name %></h3>
+          <ul class="detail-list">
+            <li><strong>Título</strong><span><%= char.title || "-" %></span></li>
+            <li><strong>Nivel</strong><span><%= char.level %></span></li>
+            <li><strong>Clase</strong><span><%= char.class_name %></span></li>
+            <li><strong>Estado</strong><span><%= char.online_label %></span></li>
+            <li><strong>Clan</strong><span><%= char.clan_name !== "-" ? char.clan_name : "Sin clan" %></span></li>
+            <li><strong>Alianza</strong><span><%= char.ally_name !== "-" ? char.ally_name : "Sin alianza" %></span></li>
+            <li><strong>PvP</strong><span><%= char.pvpkills %></span></li>
+            <li><strong>PK</strong><span><%= char.pkkills %></span></li>
+            <li><strong>Karma</strong><span><%= char.karma %></span></li>
+            <li><strong>Creado</strong><span><%= char.formattedCreateDate || "-" %></span></li>
+            <li><strong>Tiempo online</strong><span><%= char.online_time_formatted || "-" %></span></li>
+          </ul>
+        </article>
+      <% }) %>
+    </div>
   <% } %>
-</p>
-
-<h2>Datos de la cuenta</h2>
-<p><strong>Email:</strong> <%= account?.email || "-" %></p>
-<p><strong>Fecha de creación:</strong> <%= account?.formattedCreatedTime || "-" %></p>
-
-<p><a href="/change-password">Cambiar contraseña</a></p>
-
-<h2>Personajes</h2>
-
-<% if (!characters || !characters.length) { %>
-  <p>No hay personajes en esta cuenta.</p>
-<% } else { %>
-  <% characters.forEach(char => { %>
-    <hr>
-    <p><strong>Nombre:</strong> <%= char.char_name %></p>
-    <p><strong>Título:</strong> <%= char.title || "-" %></p>
-    <p><strong>Level:</strong> <%= char.level %></p>
-    <p><strong>Fecha de creación:</strong> <%= char.formattedCreateDate || "-" %></p>
-    <p><strong>Clase:</strong> <%= char.class_name %></p>
-    <p><strong>Estado:</strong> <%= char.online_label %></p>
-    <p><strong>Clan:</strong> <%= char.clan_name !== "-" ? char.clan_name : "Sin clan" %></p>
-    <p><strong>Alianza:</strong> <%= char.ally_name !== "-" ? char.ally_name : "Sin alianza" %></p>
-    <p><strong>PvP:</strong> <%= char.pvpkills %></p>
-    <p><strong>PK:</strong> <%= char.pkkills %></p>
-    <p><strong>Karma:</strong> <%= char.karma %></p>
-    <p><strong>Tiempo online:</strong> <%= char.online_time_formatted || "-" %></p>
-  <% }) %>
-<% } %>
+</section>
 
 <%- include("partials/footer") %>

@@ -1,26 +1,41 @@
 <%- include("partials/header", { title: "Descargas" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Descargas</h1>
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="eyebrow">Descargas</span>
+    <h1 class="page-title">Archivos del juego</h1>
+    <p class="page-lead">Descargá el cliente, el patch y el updater desde una sección más ordenada y clara.</p>
+  </div>
+</section>
 
-<p>Desde esta sección podés descargar los archivos necesarios para jugar.</p>
+<section class="downloads-grid">
+  <article class="download-card">
+    <div class="card-eyebrow">Cliente</div>
+    <h3><%= downloads.client.label %></h3>
+    <p>Archivo base para comenzar a jugar.</p>
+    <div class="content-actions">
+      <a class="button-link" href="<%= downloads.client.url %>">Descargar</a>
+    </div>
+  </article>
 
-<h2>Archivos disponibles</h2>
+  <article class="download-card">
+    <div class="card-eyebrow">Patch</div>
+    <h3><%= downloads.patch.label %></h3>
+    <p>Actualización recomendada para tener el contenido al día.</p>
+    <div class="content-actions">
+      <a class="button-link" href="<%= downloads.patch.url %>">Descargar</a>
+    </div>
+  </article>
 
-<ul>
-  <li>
-    <strong><%= downloads.client.label %>:</strong>
-    <a href="<%= downloads.client.url %>"><%= downloads.client.url %></a>
-  </li>
-  <li>
-    <strong><%= downloads.patch.label %>:</strong>
-    <a href="<%= downloads.patch.url %>"><%= downloads.patch.url %></a>
-  </li>
-  <li>
-    <strong><%= downloads.updater.label %>:</strong>
-    <a href="<%= downloads.updater.url %>"><%= downloads.updater.url %></a>
-  </li>
-</ul>
+  <article class="download-card">
+    <div class="card-eyebrow">Updater</div>
+    <h3><%= downloads.updater.label %></h3>
+    <p>Herramienta para mantener el cliente sincronizado con el servidor.</p>
+    <div class="content-actions">
+      <a class="button-link" href="<%= downloads.updater.url %>">Descargar</a>
+    </div>
+  </article>
+</section>
 
 <%- include("partials/footer") %>

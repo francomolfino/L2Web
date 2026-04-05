@@ -1,7 +1,11 @@
 <% if (error) { %>
-  <p><strong>Error:</strong> <%= error %></p>
+  <div class="message message-error">
+    <strong>Error:</strong> <%= error %>
+  </div>
 <% } %>
 
 <% if (message) { %>
-  <p><strong><%= message %></strong></p>
+  <div class="message message-success">
+    <%= message %>
+  </div>
 <% } %>

@@ -1,48 +1,73 @@
 <%- include("partials/header", { title: "Información del servidor" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Información del servidor</h1>
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="eyebrow">Servidor</span>
+    <h1 class="page-title">Información del servidor</h1>
+    <p class="page-lead">Resumen de rates, configuraciones principales y datos generales para que la información sea fácil de escanear.</p>
+  </div>
+</section>
 
-<h2>General</h2>
-<p><strong>Nombre:</strong> <%= serverInfo.name %></p>
-<p><strong>Crónica:</strong> <%= serverInfo.chronicle %></p>
+<section class="detail-grid">
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>General</h2>
+    </div>
+    <ul class="detail-list">
+      <li><strong>Nombre</strong><span><%= serverInfo.name %></span></li>
+      <li><strong>Crónica</strong><span><%= serverInfo.chronicle %></span></li>
+    </ul>
+  </article>
 
-<hr>
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>Rates</h2>
+    </div>
+    <ul class="detail-list">
+      <li><strong>EXP</strong><span>x<%= serverInfo.rates.exp %></span></li>
+      <li><strong>SP</strong><span>x<%= serverInfo.rates.sp %></span></li>
+      <li><strong>Adena</strong><span>x<%= serverInfo.rates.adena %></span></li>
+      <li><strong>Drop</strong><span>x<%= serverInfo.rates.drop %></span></li>
+      <li><strong>Spoil</strong><span>x<%= serverInfo.rates.spoil %></span></li>
+      <li><strong>Quest</strong><span>x<%= serverInfo.rates.quest %></span></li>
+    </ul>
+  </article>
+</section>
 
-<h2>Rates</h2>
-<p><strong>EXP:</strong> x<%= serverInfo.rates.exp %></p>
-<p><strong>SP:</strong> x<%= serverInfo.rates.sp %></p>
-<p><strong>Adena:</strong> x<%= serverInfo.rates.adena %></p>
-<p><strong>Drop:</strong> x<%= serverInfo.rates.drop %></p>
-<p><strong>Spoil:</strong> x<%= serverInfo.rates.spoil %></p>
-<p><strong>Quest:</strong> x<%= serverInfo.rates.quest %></p>
+<section class="detail-grid">
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>Configuración</h2>
+    </div>
+    <ul class="detail-list">
+      <li><strong>Max enchant weapon</strong><span><%= serverInfo.settings.maxEnchantWeapon %></span></li>
+      <li><strong>Max enchant armor</strong><span><%= serverInfo.settings.maxEnchantArmor %></span></li>
+      <li><strong>Max enchant jewelry</strong><span><%= serverInfo.settings.maxEnchantJewelry %></span></li>
+      <li><strong>Safe enchant weapon</strong><span><%= serverInfo.settings.safeEnchantWeapon %></span></li>
+      <li><strong>Safe enchant armor</strong><span><%= serverInfo.settings.safeEnchantArmor %></span></li>
+      <li><strong>Safe enchant jewelry</strong><span><%= serverInfo.settings.safeEnchantJewelry %></span></li>
+      <li><strong>Auto learn skills</strong><span><%= serverInfo.settings.autoLearnSkills ? "Sí" : "No" %></span></li>
+      <li><strong>Subclass sin quest</strong><span><%= serverInfo.settings.subclassWithoutQuest ? "Sí" : "No" %></span></li>
+      <li><strong>Buffer habilitado</strong><span><%= serverInfo.settings.bufferEnabled ? "Sí" : "No" %></span></li>
+      <li><strong>GM Shop habilitado</strong><span><%= serverInfo.settings.gmShopEnabled ? "Sí" : "No" %></span></li>
+    </ul>
+  </article>
 
-<hr>
-
-<h2>Configuración</h2>
-<p><strong>Max enchant weapon:</strong> <%= serverInfo.settings.maxEnchantWeapon %></p>
-<p><strong>Max enchant armor:</strong> <%= serverInfo.settings.maxEnchantArmor %></p>
-<p><strong>Max enchant jewelry:</strong> <%= serverInfo.settings.maxEnchantJewelry %></p>
-<p><strong>Safe enchant weapon:</strong> <%= serverInfo.settings.safeEnchantWeapon %></p>
-<p><strong>Safe enchant armor:</strong> <%= serverInfo.settings.safeEnchantArmor %></p>
-<p><strong>Safe enchant jewelry:</strong> <%= serverInfo.settings.safeEnchantJewelry %></p>
-<p><strong>Auto learn skills:</strong> <%= serverInfo.settings.autoLearnSkills ? "Sí" : "No" %></p>
-<p><strong>Subclass sin quest:</strong> <%= serverInfo.settings.subclassWithoutQuest ? "Sí" : "No" %></p>
-<p><strong>Buffer habilitado:</strong> <%= serverInfo.settings.bufferEnabled ? "Sí" : "No" %></p>
-<p><strong>GM Shop habilitado:</strong> <%= serverInfo.settings.gmShopEnabled ? "Sí" : "No" %></p>
-
-<hr>
-
-<h2>Información adicional</h2>
-<% if (!serverInfo.extra || !serverInfo.extra.length) { %>
-  <p>No hay información adicional.</p>
-<% } else { %>
-  <ul>
-    <% serverInfo.extra.forEach(item => { %>
-      <li><%= item %></li>
-    <% }) %>
-  </ul>
-<% } %>
+  <article class="detail-card">
+    <div class="section-heading">
+      <h2>Información adicional</h2>
+    </div>
+    <% if (!serverInfo.extra || !serverInfo.extra.length) { %>
+      <div class="empty-state">No hay información adicional.</div>
+    <% } else { %>
+      <ul class="compact-list">
+        <% serverInfo.extra.forEach(item => { %>
+          <li><strong>Detalle</strong><span><%= item %></span></li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </article>
+</section>
 
 <%- include("partials/footer") %>

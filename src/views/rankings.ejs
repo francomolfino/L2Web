@@ -1,57 +1,52 @@
 <%- include("partials/header", { title: "Rankings" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Rankings</h1>
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="eyebrow">Competencia</span>
+    <h1 class="page-title">Rankings</h1>
+    <p class="page-lead">Consultá los personajes destacados del servidor en PvP y PK con una presentación más clara y legible.</p>
+  </div>
+</section>
 
-<p><a href="/">Volver al inicio</a></p>
+<section class="ranking-grid">
+  <article class="rank-item">
+    <div class="section-heading">
+      <h2>Ranking PvP</h2>
+    </div>
 
-<hr>
+    <% if (!topPvp || !topPvp.length) { %>
+      <div class="empty-state">No hay datos disponibles.</div>
+    <% } else { %>
+      <ol>
+        <% topPvp.forEach(row => { %>
+          <li class="rank-entry">
+            <strong><%= row.char_name %></strong><br>
+            <span class="muted"><%= row.class_name %> | Nivel <%= row.level %> | PvP <%= row.pvpkills %> | Clan <%= row.clan_name %></span>
+          </li>
+        <% }) %>
+      </ol>
+    <% } %>
+  </article>
 
-<h2>Ranking PvP</h2>
+  <article class="rank-item">
+    <div class="section-heading">
+      <h2>Ranking PK</h2>
+    </div>
 
-<% if (!topPvp || !topPvp.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPvp.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPvp.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-<% } %>
-
-<hr>
-
-<h2>Ranking PK</h2>
-
-<% if (!topPk || !topPk.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPk.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PK:</strong> <%= row.pkkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPk.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-<% } %>
+    <% if (!topPk || !topPk.length) { %>
+      <div class="empty-state">No hay datos disponibles.</div>
+    <% } else { %>
+      <ol>
+        <% topPk.forEach(row => { %>
+          <li class="rank-entry">
+            <strong><%= row.char_name %></strong><br>
+            <span class="muted"><%= row.class_name %> | Nivel <%= row.level %> | PK <%= row.pkkills %> | Clan <%= row.clan_name %></span>
+          </li>
+        <% }) %>
+      </ol>
+    <% } %>
+  </article>
+</section>
 
 <%- include("partials/footer") %>

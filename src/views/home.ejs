@@ -1,113 +1,88 @@
 <%- include("partials/header", { title: "Inicio" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>L2Web</h1>
+<section class="home-compact">
+  <div class="home-intro">
+    <h1 class="home-title">L2Web</h1>
+    <p class="home-subtitle">Noticias del servidor y estado actual en una portada simple y directa.</p>
+  </div>
 
-<h2>Estado del servidor</h2>
-<p>
-  <strong>Estado del Game Server:</strong>
-  <% if (status && status.online) { %>
-    Online
+  <div class="home-top-row">
+    <article class="status-panel">
+      <div class="section-heading">
+        <h2>Estado del servidor</h2>
+      </div>
+      <div class="status-row">
+        <span class="status-pill <%= status && status.online ? "status-online" : "status-offline" %>">
+          <%= status && status.online ? "Online" : "Offline" %>
+        </span>
+        <span class="meta-pill"><strong>Online:</strong> <%= onlinePlayers %> jugadores</span>
+      </div>
+    </article>
+  </div>
+</section>
+
+<section class="stack">
+  <div class="section-heading">
+    <h2>Noticias</h2>
+    <a href="/news">Ver todas</a>
+  </div>
+
+  <% if (!latestNews || !latestNews.length) { %>
+    <div class="empty-state">No hay noticias publicadas.</div>
   <% } else { %>
-    Offline
+    <div class="news-grid compact-news-grid">
+      <% latestNews.forEach(article => { %>
+        <article class="news-item">
+          <h3><a href="/news/<%= article.slug %>"><%= article.title %></a></h3>
+          <p class="news-date"><%= article.formattedDate %></p>
+          <p><%= article.summary %></p>
+        </article>
+      <% }) %>
+    </div>
   <% } %>
-</p>
+</section>
 
+<section class="ranking-grid">
+  <article class="rank-item">
+    <div class="section-heading">
+      <h2>Top PvP</h2>
+      <a href="/rankings">Ranking completo</a>
+    </div>
 
-<p><strong>Players online:</strong> <%= onlinePlayers %></p>
-
-<hr>
-
-<h2>Secciones</h2>
-<ul>
-  <li><a href="/downloads">Descargas</a></li>
-  <li><a href="/info">Información del servidor</a></li>
-  <li><a href="/rankings">Rankings</a></li>
-</ul>
-
-<% if (user) { %>
-  <h2>Bienvenido</h2>
-  <p>Sesión iniciada como <strong><%= user.login %></strong>.</p>
-  <p><a href="/account">Ir a mi cuenta</a></p>
-<% } else { %>
-  <h2>Acceso rápido</h2>
-  <p>Usá el menú superior para iniciar sesión, registrarte o recuperar tu contraseña.</p>
-<% } %>
-
-<hr>
-
-<h2>Noticias</h2>
-
-<% if (!latestNews || !latestNews.length) { %>
-  <p>No hay noticias publicadas.</p>
-<% } else { %>
-  <% latestNews.forEach((article, index) => { %>
-    <h3>
-      <a href="/news/<%= article.slug %>"><%= article.title %></a>
-    </h3>
-
-    <p><%= article.formattedDate %></p>
-    <p><%= article.summary %></p>
-
-    <% if (index !== latestNews.length - 1) { %>
-      <hr>
+    <% if (!topPvp || !topPvp.length) { %>
+      <div class="empty-state">No hay datos disponibles.</div>
+    <% } else { %>
+      <ol>
+        <% topPvp.forEach(row => { %>
+          <li class="rank-entry">
+            <strong><%= row.char_name %></strong><br>
+            <span class="muted"><%= row.class_name %> | Nivel <%= row.level %> | PvP <%= row.pvpkills %> | Clan <%= row.clan_name %></span>
+          </li>
+        <% }) %>
+      </ol>
     <% } %>
-  <% }) %>
+  </article>
 
-  <p><a href="/news">Ver todas</a></p>
-<% } %>
+  <article class="rank-item">
+    <div class="section-heading">
+      <h2>Top PK</h2>
+      <a href="/rankings">Ranking completo</a>
+    </div>
 
-<hr>
-
-<h2>Top 5 PvP</h2>
-
-<% if (!topPvp || !topPvp.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPvp.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPvp.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-
-  <p><a href="/rankings">Ver ranking PvP completo</a></p>
-<% } %>
-
-<hr>
-
-<h2>Top 5 PK</h2>
-
-<% if (!topPk || !topPk.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPk.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PK:</strong> <%= row.pkkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPk.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-
-  <p><a href="/rankings">Ver ranking PK completo</a></p>
-<% } %>
+    <% if (!topPk || !topPk.length) { %>
+      <div class="empty-state">No hay datos disponibles.</div>
+    <% } else { %>
+      <ol>
+        <% topPk.forEach(row => { %>
+          <li class="rank-entry">
+            <strong><%= row.char_name %></strong><br>
+            <span class="muted"><%= row.class_name %> | Nivel <%= row.level %> | PK <%= row.pkkills %> | Clan <%= row.clan_name %></span>
+          </li>
+        <% }) %>
+      </ol>
+    <% } %>
+  </article>
+</section>
 
 <%- include("partials/footer") %>

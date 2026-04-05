@@ -1,24 +1,24 @@
-<nav>
-  <a href="/">Inicio</a>
-  <a href="/rankings">Rankings</a>
-  <a href="/downloads">Descargas</a>
-  <a href="/info">Información</a>
+<nav class="top-nav">
+  <div class="nav-left">
+    <a href="/">Inicio</a>
+    <a href="/info">Servidor</a>
+    <a href="/downloads">Descargas</a>
+    <a href="/rankings">Rankings</a>
+    <a href="/news">Noticias</a>
+  </div>
 
-  <% if (user) { %>
-    <a href="/account">Mi cuenta</a>
-    <a href="/change-password">Cambiar contraseña</a>
+  <div class="nav-right">
+    <% if (user) { %>
+      <span class="nav-user-text"><strong><%= user.login %></strong></span>
+      <a href="/account">Cuenta</a>
 
-    <form method="post" action="/logout" style="display:inline;">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit">Cerrar sesión</button>
-    </form>
-
-    <span>Conectado como <strong><%= user.login %></strong></span>
-  <% } else { %>
-    <a href="/login">Iniciar sesión</a>
-    <a href="/register">Registrarse</a>
-    <a href="/forgot-password">Recuperar contraseña</a>
-  <% } %>
+      <form method="post" action="/logout" class="inline-form">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button type="submit">Cerrar sesión</button>
+      </form>
+    <% } else { %>
+      <a href="/register">Registrarse</a>
+      <a href="/login">Iniciar sesión</a>
+    <% } %>
+  </div>
 </nav>
-
-<hr>

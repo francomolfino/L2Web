@@ -1,26 +1,32 @@
 <%- include("partials/header", { title: "Noticias" }) %>
-<%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Noticias</h1>
+<section class="page-hero">
+  <div class="page-hero-content">
+    <span class="eyebrow">Noticias</span>
+    <h1 class="page-title">Novedades del servidor</h1>
+    <p class="page-lead">Anuncios, actualizaciones y comunicados publicados para la comunidad.</p>
+  </div>
+</section>
 
-<% if (!newsList || !newsList.length) { %>
-  <p>No hay noticias publicadas.</p>
-<% } else { %>
-  <% newsList.forEach((article, index) => { %>
-    <h2>
-      <a href="/news/<%= article.slug %>"><%= article.title %></a>
-    </h2>
+<section class="stack">
+  <% if (!newsList || !newsList.length) { %>
+    <div class="empty-state">No hay noticias publicadas.</div>
+  <% } else { %>
+    <div class="news-grid">
+      <% newsList.forEach(article => { %>
+        <article class="news-item">
+          <h2><a href="/news/<%= article.slug %>"><%= article.title %></a></h2>
+          <p class="news-date"><%= article.formattedDate %></p>
+          <p><%= article.summary %></p>
+        </article>
+      <% }) %>
+    </div>
+  <% } %>
 
-    <p><%= article.formattedDate %></p>
-    <p><%= article.summary %></p>
-
-    <% if (index !== newsList.length - 1) { %>
-      <hr>
-    <% } %>
-  <% }) %>
-<% } %>
-
-<p><a href="/">Volver al inicio</a></p>
+  <div class="content-actions">
+    <a class="button-link button-link-secondary" href="/">Volver al inicio</a>
+  </div>
+</section>
 
 <%- include("partials/footer") %>
