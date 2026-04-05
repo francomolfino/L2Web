@@ -1,0 +1,26 @@
+<%- include("partials/header", { title: "Noticias" }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages") %>
+
+<h1>Noticias</h1>
+
+<% if (!newsList || !newsList.length) { %>
+  <p>No hay noticias publicadas.</p>
+<% } else { %>
+  <% newsList.forEach((article, index) => { %>
+    <h2>
+      <a href="/news/<%= article.slug %>"><%= article.title %></a>
+    </h2>
+
+    <p><%= article.formattedDate %></p>
+    <p><%= article.summary %></p>
+
+    <% if (index !== newsList.length - 1) { %>
+      <hr>
+    <% } %>
+  <% }) %>
+<% } %>
+
+<p><a href="/">Volver al inicio</a></p>
+
+<%- include("partials/footer") %>

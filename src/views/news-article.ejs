@@ -1,0 +1,21 @@
+<%- include("partials/header", { title: article.title }) %>
+<%- include("partials/nav") %>
+<%- include("partials/messages") %>
+
+<h1><%= article.title %></h1>
+
+<p><%= article.formattedDate %></p>
+
+<hr>
+
+<% article.body.split("\n").forEach(paragraph => { %>
+  <% if (paragraph.trim()) { %>
+    <p><%= paragraph %></p>
+  <% } %>
+<% }) %>
+
+<hr>
+
+<p><a href="/">Volver al inicio</a></p>
+
+<%- include("partials/footer") %>

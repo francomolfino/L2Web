@@ -37,6 +37,29 @@
 
 <hr>
 
+<h2>Noticias</h2>
+
+<% if (!latestNews || !latestNews.length) { %>
+  <p>No hay noticias publicadas.</p>
+<% } else { %>
+  <% latestNews.forEach((article, index) => { %>
+    <h3>
+      <a href="/news/<%= article.slug %>"><%= article.title %></a>
+    </h3>
+
+    <p><%= article.formattedDate %></p>
+    <p><%= article.summary %></p>
+
+    <% if (index !== latestNews.length - 1) { %>
+      <hr>
+    <% } %>
+  <% }) %>
+
+  <p><a href="/news">Ver todas</a></p>
+<% } %>
+
+<hr>
+
 <h2>Top 5 PvP</h2>
 
 <% if (!topPvp || !topPvp.length) { %>

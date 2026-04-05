@@ -6,6 +6,8 @@ import {
   getTopPk
 } from "../services/statsService.js";
 import { serverInfo } from "../data/serverInfo.js";
+import { news } from "../data/news.js";
+import { formatDate } from "../utils/dateUtils.js";
 
 const router = Router();
 
@@ -15,12 +17,17 @@ router.get("/", async (req, res) => {
     const onlinePlayers = await getOnlinePlayersCount();
     const topPvp = await getTopPvp(5);
     const topPk = await getTopPk(5);
+    const formattedNews = news.map(n => ({
+      ...n,
+      formattedDate: formatDate(n.publishedAt)
+    }));
 
     return res.render("home", {
       status,
       onlinePlayers,
       topPvp,
-      topPk
+      topPk,
+      latestNews: formattedNews.slice(0, 3)
     });
   } catch (error) {
     console.error("HOME ERROR:", error);
@@ -29,7 +36,8 @@ router.get("/", async (req, res) => {
       status: { online: false },
       onlinePlayers: 0,
       topPvp: [],
-      topPk: []
+      topPk: [],
+      latestNews: formattedNews.slice(0, 3)
     });
   }
 });
@@ -62,6 +70,35 @@ router.get("/downloads", (req, res) => {
 router.get("/info", (req, res) => {
   return res.render("info", {
     serverInfo
+  });
+});
+
+router.get("/news", (req, res) => {
+  const formattedNews = news.map(n => ({
+    ...n,
+    formattedDate: formatDate(n.publishedAt)
+  }));
+
+  return res.render("news-list", {
+    newsList: formattedNews
+  });
+});
+
+router.get("/news/:slug", (req, res) => {
+  const article = news.find((item) => item.slug === req.params.slug);
+
+  if (!article) {
+    return res.status(404).render("error", {
+      title: "404",
+      message: "Noticia no encontrada"
+    });
+  }
+
+  return res.render("news-article", {
+    article: {
+      ...article,
+      formattedDate: formatDate(article.publishedAt)
+    }
   });
 });
 
