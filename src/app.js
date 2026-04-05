@@ -51,6 +51,12 @@ app.use((req, res, next) => {
 
 app.use((req, res, next) => {
   res.locals.user = req.session?.user || null;
+  res.locals.error = req.session?.error || null;
+  res.locals.message = req.session?.message || null;
+
+  delete req.session.error;
+  delete req.session.message;
+
   next();
 });
 

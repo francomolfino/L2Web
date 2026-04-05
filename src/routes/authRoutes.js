@@ -14,7 +14,6 @@ import {
   forgotPasswordRateLimiter,
   registerRateLimiter
 } from "../middleware/rateLimiters.js";
-
 import {
   normalizeLogin,
   normalizeEmail,
@@ -28,7 +27,7 @@ import { getClientIp } from "../services/requestService.js";
 const router = Router();
 
 router.get("/register", (req, res) => {
-  res.render("register", { error: null });
+  res.render("register");
 });
 
 router.post("/register", registerRateLimiter, async (req, res) => {
@@ -47,7 +46,11 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Missing required fields"
       });
 
-      return res.render("register", { error: "Completá todos los campos." });
+      req.session.error = "Completá todos los campos.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
+      });
     }
 
     if (!isValidLogin(login)) {
@@ -58,8 +61,10 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Invalid login format"
       });
 
-      return res.render("register", {
-        error: "El usuario debe tener entre 3 y 16 caracteres y solo usar letras, números o guion bajo."
+      req.session.error = "El usuario debe tener entre 3 y 16 caracteres y solo usar letras, números o guion bajo.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
       });
     }
 
@@ -71,7 +76,11 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Invalid email format"
       });
 
-      return res.render("register", { error: "El email no es válido." });
+      req.session.error = "El email no es válido.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
+      });
     }
 
     if (!isValidPassword(password)) {
@@ -82,8 +91,10 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Invalid password format"
       });
 
-      return res.render("register", {
-        error: "La contraseña debe tener entre 6 y 32 caracteres."
+      req.session.error = "La contraseña debe tener entre 6 y 32 caracteres.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
       });
     }
 
@@ -95,7 +106,11 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Password confirmation mismatch"
       });
 
-      return res.render("register", { error: "Las contraseñas no coinciden." });
+      req.session.error = "Las contraseñas no coinciden.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
+      });
     }
 
     const existing = await findAccountByLogin(login);
@@ -107,7 +122,11 @@ router.post("/register", registerRateLimiter, async (req, res) => {
         details: "Account already exists"
       });
 
-      return res.render("register", { error: "La cuenta ya existe." });
+      req.session.error = "La cuenta ya existe.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/register");
+      });
     }
 
     await createAccount(login, password, email);
@@ -119,13 +138,19 @@ router.post("/register", registerRateLimiter, async (req, res) => {
       details: "Account created"
     });
 
-    req.session.regenerate((err) => {
+    return req.session.regenerate((err) => {
       if (err) {
+        console.error(err);
         return res.redirect("/login");
       }
 
       req.session.user = { login };
-      return res.redirect("/account");
+      req.session.message = "Cuenta creada correctamente";
+
+      return req.session.save((saveErr) => {
+        if (saveErr) console.error(saveErr);
+        return res.redirect("/account");
+      });
     });
   } catch (error) {
     console.error(error);
@@ -137,12 +162,16 @@ router.post("/register", registerRateLimiter, async (req, res) => {
       details: "Unhandled exception"
     });
 
-    return res.render("register", { error: "No se pudo crear la cuenta." });
+    req.session.error = "No se pudo crear la cuenta.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/register");
+    });
   }
 });
 
 router.get("/login", (req, res) => {
-  res.render("login", { error: null });
+  res.render("login");
 });
 
 router.post("/login", loginRateLimiter, async (req, res) => {
@@ -159,9 +188,12 @@ router.post("/login", loginRateLimiter, async (req, res) => {
         details: "Missing credentials"
       });
 
-      return res.render("login", { error: "Completá usuario y contraseña." });
+      req.session.error = "Completá usuario y contraseña.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/login");
+      });
     }
-
 
     const user = await loginWithGameAccount(login, password);
 
@@ -173,7 +205,11 @@ router.post("/login", loginRateLimiter, async (req, res) => {
         details: "Invalid credentials"
       });
 
-      return res.render("login", { error: "Credenciales inválidas." });
+      req.session.error = "Credenciales inválidas.";
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/login");
+      });
     }
 
     await writeAuditLog({
@@ -183,13 +219,24 @@ router.post("/login", loginRateLimiter, async (req, res) => {
       details: "Successful login"
     });
 
-    req.session.regenerate((err) => {
+    return req.session.regenerate((err) => {
       if (err) {
-        return res.render("login", { error: "No se pudo iniciar sesión." });
+        console.error(err);
+        req.session.error = "No se pudo iniciar sesión.";
+
+        return req.session.save((saveErr) => {
+          if (saveErr) console.error(saveErr);
+          return res.redirect("/login");
+        });
       }
 
       req.session.user = user;
-      return res.redirect("/account");
+      req.session.message = "Sesión iniciada correctamente.";
+
+      return req.session.save((saveErr) => {
+        if (saveErr) console.error(saveErr);
+        return res.redirect("/account");
+      });
     });
   } catch (error) {
     console.error(error);
@@ -201,7 +248,11 @@ router.post("/login", loginRateLimiter, async (req, res) => {
       details: "Unhandled exception"
     });
 
-    return res.render("login", { error: "No se pudo iniciar sesión." });
+    req.session.error = "No se pudo iniciar sesión.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/login");
+    });
   }
 });
 
@@ -213,7 +264,7 @@ router.post("/logout", (req, res) => {
 });
 
 router.get("/forgot-password", (req, res) => {
-  res.render("forgot-password", { message: null });
+  res.render("forgot-password");
 });
 
 router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
@@ -230,7 +281,11 @@ router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
         details: "Invalid or empty login"
       });
 
-      return res.render("forgot-password", { message: genericMessage });
+      req.session.message = genericMessage;
+      return req.session.save((err) => {
+        if (err) console.error(err);
+        return res.redirect("/forgot-password");
+      });
     }
 
     const account = await findAccountByLogin(login);
@@ -260,7 +315,11 @@ router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
       });
     }
 
-    return res.render("forgot-password", { message: genericMessage });
+    req.session.message = genericMessage;
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/forgot-password");
+    });
   } catch (error) {
     console.error(error);
 
@@ -271,8 +330,10 @@ router.post("/forgot-password", forgotPasswordRateLimiter, async (req, res) => {
       details: "Unhandled exception"
     });
 
-    return res.render("forgot-password", {
-      message: "No se pudo procesar la solicitud."
+    req.session.error = "No se pudo procesar la solicitud.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/forgot-password");
     });
   }
 });
@@ -283,9 +344,9 @@ router.get("/reset-password", async (req, res) => {
 
     if (!token) {
       return res.render("reset-password", {
-        error: "Token inválido.",
         token: "",
-        isValidToken: false
+        isValidToken: false,
+        error: "Token inválido."
       });
     }
 
@@ -293,24 +354,24 @@ router.get("/reset-password", async (req, res) => {
 
     if (!valid) {
       return res.render("reset-password", {
-        error: "Este enlace ya fue usado o venció.",
         token: "",
-        isValidToken: false
+        isValidToken: false,
+        error: "Este enlace ya fue usado o venció."
       });
     }
 
     return res.render("reset-password", {
-      error: null,
       token,
-      isValidToken: true
+      isValidToken: true,
+      error: null
     });
   } catch (error) {
     console.error(error);
 
     return res.render("reset-password", {
-      error: "No se pudo validar el enlace.",
       token: "",
-      isValidToken: false
+      isValidToken: false,
+      error: "No se pudo validar el enlace."
     });
   }
 });
@@ -329,7 +390,11 @@ router.post("/reset-password", async (req, res) => {
         details: "Missing token"
       });
 
-      return res.render("reset-password", { error: "Token inválido.", token: "" });
+      return res.render("reset-password", {
+        token: "",
+        isValidToken: false,
+        error: "Token inválido."
+      });
     }
 
     if (!isValidPassword(password)) {
@@ -340,8 +405,9 @@ router.post("/reset-password", async (req, res) => {
       });
 
       return res.render("reset-password", {
-        error: "La contraseña debe tener entre 6 y 32 caracteres.",
-        token
+        token,
+        isValidToken: true,
+        error: "La contraseña debe tener entre 6 y 32 caracteres."
       });
     }
 
@@ -353,8 +419,9 @@ router.post("/reset-password", async (req, res) => {
       });
 
       return res.render("reset-password", {
-        error: "Las contraseñas no coinciden.",
-        token
+        token,
+        isValidToken: true,
+        error: "Las contraseñas no coinciden."
       });
     }
 
@@ -368,13 +435,13 @@ router.post("/reset-password", async (req, res) => {
       });
 
       return res.render("reset-password", {
-        error: "Token inválido o vencido.",
-        token: ""
+        token: "",
+        isValidToken: false,
+        error: "Token inválido o vencido."
       });
     }
 
     await updateAccountPassword(accountName, password);
-
     await invalidateRecoveryTokens(accountName);
 
     await writeAuditLog({
@@ -384,7 +451,11 @@ router.post("/reset-password", async (req, res) => {
       details: "Password reset completed"
     });
 
-    return res.redirect("/login");
+    req.session.message = "Contraseña restablecida correctamente.";
+    return req.session.save((err) => {
+      if (err) console.error(err);
+      return res.redirect("/login");
+    });
   } catch (error) {
     console.error(error);
 
@@ -395,8 +466,9 @@ router.post("/reset-password", async (req, res) => {
     });
 
     return res.render("reset-password", {
-      error: "No se pudo resetear la contraseña.",
-      token: ""
+      token: "",
+      isValidToken: false,
+      error: "No se pudo resetear la contraseña."
     });
   }
 });
