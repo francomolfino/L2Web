@@ -4,38 +4,52 @@
 
 <h1>Rankings</h1>
 
+<p><a href="/">Volver al inicio</a></p>
+
+<hr>
+
 <h2>Ranking PvP</h2>
-<% if (!topPvp.length) { %>
+
+<% if (!topPvp || !topPvp.length) { %>
   <p>No hay datos.</p>
 <% } else { %>
   <ol>
-    <% topPvp.forEach(row => { %>
+    <% topPvp.forEach((row, index) => { %>
       <li>
-        <strong><%= row.char_name %></strong>
-        - PvP: <%= row.pvpkills %>
-        - PK: <%= row.pkkills %>
-        - Level: <%= row.level %>
-        - Clase: <%= row.class_name %>
-        - Clan: <%= row.clan_name %>
+        <p><strong>Nombre:</strong> <%= row.char_name %></p>
+        <p><strong>Clase:</strong> <%= row.class_name %></p>
+        <p><strong>Level:</strong> <%= row.level %></p>
+        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
+        <p><strong>Clan:</strong> <%= row.clan_name %></p>
       </li>
+
+      <% if (index !== topPvp.length - 1) { %>
+        <hr>
+      <% } %>
     <% }) %>
   </ol>
 <% } %>
 
+<hr>
+
 <h2>Ranking PK</h2>
-<% if (!topPk.length) { %>
+
+<% if (!topPk || !topPk.length) { %>
   <p>No hay datos.</p>
 <% } else { %>
   <ol>
-    <% topPk.forEach(row => { %>
+    <% topPk.forEach((row, index) => { %>
       <li>
-        <strong><%= row.char_name %></strong>
-        - PK: <%= row.pkkills %>
-        - PvP: <%= row.pvpkills %>
-        - Level: <%= row.level %>
-        - Clase: <%= row.class_name %>
-        - Clan: <%= row.clan_name %>
+        <p><strong>Nombre:</strong> <%= row.char_name %></p>
+        <p><strong>Clase:</strong> <%= row.class_name %></p>
+        <p><strong>Level:</strong> <%= row.level %></p>
+        <p><strong>PK:</strong> <%= row.pkkills %></p>
+        <p><strong>Clan:</strong> <%= row.clan_name %></p>
       </li>
+
+      <% if (index !== topPk.length - 1) { %>
+        <hr>
+      <% } %>
     <% }) %>
   </ol>
 <% } %>

@@ -2,13 +2,14 @@ import express from "express";
 import session from "express-session";
 import path from "path";
 import { fileURLToPath } from "url";
+import helmet from "helmet";
+
 import { config } from "./config.js";
 import authRoutes from "./routes/authRoutes.js";
 import accountRoutes from "./routes/accountRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
 import publicRoutes from "./routes/publicRoutes.js";
 import { cleanupExpiredRecoveryTokens } from "./services/recoveryService.js";
-import helmet from "helmet";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -66,7 +67,7 @@ app.use(accountRoutes);
 app.use(apiRoutes);
 
 app.use((req, res) => {
-  res.status(404).render("error", {
+  return res.status(404).render("error", {
     title: "404",
     message: "Página no encontrada"
   });
@@ -75,7 +76,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error(err);
 
-  res.status(500).render("error", {
+  return res.status(500).render("error", {
     title: "500",
     message: "Ocurrió un error interno."
   });

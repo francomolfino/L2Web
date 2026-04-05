@@ -2,11 +2,11 @@
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Cuenta: <%= login %></h1>
+<h1>Cuenta: <%= account?.login || login %></h1>
 
 <p>
   Estado del servidor:
-  <% if (status.online) { %>
+  <% if (status && status.online) { %>
     <strong>Online</strong>
   <% } else { %>
     <strong>Offline</strong>

@@ -4,51 +4,79 @@
 
 <h1>L2Web</h1>
 
+<h2>Estado del servidor</h2>
 <p>
-  Estado del servidor:
-  <% if (status.online) { %>
-    <strong>Online</strong>
+  <strong>Estado del Game Server:</strong>
+  <% if (status && status.online) { %>
+    Online
   <% } else { %>
-    <strong>Offline</strong>
+    Offline
   <% } %>
 </p>
 
 <p><strong>Players online:</strong> <%= onlinePlayers %></p>
 
+<hr>
+
+<% if (user) { %>
+  <h2>Bienvenido</h2>
+  <p>Sesión iniciada como <strong><%= user.login %></strong>.</p>
+  <p><a href="/account">Ir a mi cuenta</a></p>
+<% } else { %>
+  <h2>Acceso rápido</h2>
+  <p>Usá el menú superior para iniciar sesión, registrarte o recuperar tu contraseña.</p>
+<% } %>
+
+<hr>
+
 <h2>Top 5 PvP</h2>
-<% if (!topPvp.length) { %>
+
+<% if (!topPvp || !topPvp.length) { %>
   <p>No hay datos.</p>
 <% } else { %>
   <ol>
-    <% topPvp.forEach(row => { %>
+    <% topPvp.forEach((row, index) => { %>
       <li>
-        <strong><%= row.char_name %></strong>
-        - PvP: <%= row.pvpkills %>
-        - Level: <%= row.level %>
-        - Clase: <%= row.class_name %>
-        - Clan: <%= row.clan_name %>
+        <p><strong>Nombre:</strong> <%= row.char_name %></p>
+        <p><strong>Clase:</strong> <%= row.class_name %></p>
+        <p><strong>Level:</strong> <%= row.level %></p>
+        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
+        <p><strong>Clan:</strong> <%= row.clan_name %></p>
       </li>
+
+      <% if (index !== topPvp.length - 1) { %>
+        <hr>
+      <% } %>
     <% }) %>
   </ol>
+
+  <p><a href="/rankings">Ver ranking PvP completo</a></p>
 <% } %>
+
+<hr>
 
 <h2>Top 5 PK</h2>
-<% if (!topPk.length) { %>
+
+<% if (!topPk || !topPk.length) { %>
   <p>No hay datos.</p>
 <% } else { %>
   <ol>
-    <% topPk.forEach(row => { %>
+    <% topPk.forEach((row, index) => { %>
       <li>
-        <strong><%= row.char_name %></strong>
-        - PK: <%= row.pkkills %>
-        - Level: <%= row.level %>
-        - Clase: <%= row.class_name %>
-        - Clan: <%= row.clan_name %>
+        <p><strong>Nombre:</strong> <%= row.char_name %></p>
+        <p><strong>Clase:</strong> <%= row.class_name %></p>
+        <p><strong>Level:</strong> <%= row.level %></p>
+        <p><strong>PK:</strong> <%= row.pkkills %></p>
+        <p><strong>Clan:</strong> <%= row.clan_name %></p>
       </li>
+
+      <% if (index !== topPk.length - 1) { %>
+        <hr>
+      <% } %>
     <% }) %>
   </ol>
-<% } %>
 
-<p><a href="/rankings">Ver rankings detallados</a></p>
+  <p><a href="/rankings">Ver ranking PK completo</a></p>
+<% } %>
 
 <%- include("partials/footer") %>
