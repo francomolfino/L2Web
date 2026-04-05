@@ -12,15 +12,16 @@ import { formatDate } from "../utils/dateUtils.js";
 const router = Router();
 
 router.get("/", async (req, res) => {
+  const formattedNews = news.map(n => ({
+    ...n,
+    formattedDate: formatDate(n.publishedAt)
+  }));
+
   try {
     const status = await getServerStatus();
     const onlinePlayers = await getOnlinePlayersCount();
     const topPvp = await getTopPvp(5);
     const topPk = await getTopPk(5);
-    const formattedNews = news.map(n => ({
-      ...n,
-      formattedDate: formatDate(n.publishedAt)
-    }));
 
     return res.render("home", {
       status,
