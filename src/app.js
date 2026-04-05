@@ -10,6 +10,8 @@ import accountRoutes from "./routes/accountRoutes.js";
 import apiRoutes from "./routes/apiRoutes.js";
 import publicRoutes from "./routes/publicRoutes.js";
 import { cleanupExpiredRecoveryTokens } from "./services/recoveryService.js";
+import { csrfTokenMiddleware } from "./middleware/csrf.js";
+import { requireCsrf } from "./middleware/csrf.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,6 +41,8 @@ app.use(
   })
 );
 
+app.use(csrfTokenMiddleware);
+
 app.use(
   helmet({
     contentSecurityPolicy: false
@@ -60,6 +64,11 @@ app.use((req, res, next) => {
 
   next();
 });
+
+app.use(
+  ["/login", "/register", "/logout", "/forgot-password", "/reset-password", "/change-password"],
+  requireCsrf
+);
 
 app.use(publicRoutes);
 app.use(authRoutes);
