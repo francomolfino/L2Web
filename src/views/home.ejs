@@ -1,113 +1,161 @@
-<%- include("partials/header", { title: "Inicio" }) %>
+<%- include("partials/header", { title: "Inicio", bodyClass: "home-page" }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>L2Web</h1>
+<%
+  const monthNames = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+  const formatNewsDate = (publishedAt) => {
+    const date = new Date(publishedAt);
+    if (Number.isNaN(date.getTime())) return { day: "--", month: "---" };
+    return {
+      day: String(date.getUTCDate()).padStart(2, "0"),
+      month: monthNames[date.getUTCMonth()]
+    };
+  };
+  const newsImages = [
+    "/conquer/images/news-img-big_v1.jpg",
+    "/conquer/images/news-img-small_1_v1.jpg",
+    "/conquer/images/news-img-small_2_v1.jpg"
+  ];
+  const mainNews = latestNews && latestNews.length ? latestNews[0] : null;
+  const smallNews = latestNews && latestNews.length > 1 ? latestNews.slice(1, 3) : [];
+%>
 
-<h2>Estado del servidor</h2>
-<p>
-  <strong>Estado del Game Server:</strong>
-  <% if (status && status.online) { %>
-    Online
-  <% } else { %>
-    Offline
-  <% } %>
-</p>
+<header class="header flex-s-c">
+  <div class="logo">
+    <a href="/"><img src="/conquer/images/logo1.png" alt="L2Web"></a>
+  </div>
 
+  <div class="headerInfo">
+    <div class="headerInfo-title">
+      IT'S TIME<br> FOR THE <span>WINNERS</span>
+    </div>
+    <div class="headerInfo-text">
+      <%= serverInfo && serverInfo.chronicle ? `${serverInfo.chronicle} server` : "Classic Lineage II server" %> with live rankings, account tools and everything you need to start playing.
+    </div>
+    <div class="headerInfo-button">
+      <a href="<%= user ? "/downloads" : "/register" %>" class="button"><i class="icon icon-battle"></i> Start Game</a>
+    </div>
+  </div>
 
-<p><strong>Players online:</strong> <%= onlinePlayers %></p>
+  <div class="sparks sparks_2" aria-hidden="true">
+    <div class="spark_1"></div>
+    <div class="spark_2"></div>
+    <div class="spark_3"></div>
+    <div class="spark_4 spark-big"></div>
+    <div class="spark_5 spark-big"></div>
+  </div>
+</header>
 
-<hr>
+<div class="main">
+  <aside class="sidebar">
+    <div class="top">
+      <div class="tabs tabsBlock">
+        <ul class="tabs-caption tabs-button">
+          <li class="active" data-tab-target="top-pvp">Top PvP</li>
+          <li data-tab-target="top-pk">Top Pk</li>
+          <li data-tab-target="castles">Castles</li>
+        </ul>
 
-<h2>Secciones</h2>
-<ul>
-  <li><a href="/downloads">Descargas</a></li>
-  <li><a href="/info">Información del servidor</a></li>
-  <li><a href="/rankings">Rankings</a></li>
-</ul>
+        <div class="tabBlock">
+          <div class="tabs-content tabContent active" data-tab-panel="top-pvp">
+            <div class="table">
+              <% if (!topPvp || !topPvp.length) { %>
+                <div class="table-row empty-row"><div class="table-td name">No hay datos disponibles.</div></div>
+              <% } else { %>
+                <% topPvp.forEach((row, index) => { %>
+                  <div class="table-row <%= index < 3 ? "table-row-top" : "" %>">
+                    <div class="table-td number"><span class="<%= index < 3 ? `n-top-${index + 1}` : "" %>"><%= index + 1 %></span></div>
+                    <div class="table-td name"><a href="/rankings"><%= row.char_name %></a></div>
+                    <div class="table-td points"><%= row.pvpkills %></div>
+                  </div>
+                <% }) %>
+              <% } %>
+            </div>
+          </div>
 
-<% if (user) { %>
-  <h2>Bienvenido</h2>
-  <p>Sesión iniciada como <strong><%= user.login %></strong>.</p>
-  <p><a href="/account">Ir a mi cuenta</a></p>
-<% } else { %>
-  <h2>Acceso rápido</h2>
-  <p>Usá el menú superior para iniciar sesión, registrarte o recuperar tu contraseña.</p>
-<% } %>
+          <div class="tabs-content tabContent" data-tab-panel="top-pk">
+            <div class="table">
+              <% if (!topPk || !topPk.length) { %>
+                <div class="table-row empty-row"><div class="table-td name">No hay datos disponibles.</div></div>
+              <% } else { %>
+                <% topPk.forEach((row, index) => { %>
+                  <div class="table-row <%= index < 3 ? "table-row-top" : "" %>">
+                    <div class="table-td number"><span class="<%= index < 3 ? `n-top-${index + 1}` : "" %>"><%= index + 1 %></span></div>
+                    <div class="table-td name"><a href="/rankings"><%= row.char_name %></a></div>
+                    <div class="table-td points"><%= row.pkkills %></div>
+                  </div>
+                <% }) %>
+              <% } %>
+            </div>
+          </div>
 
-<hr>
+          <div class="tabs-content tabContent" data-tab-panel="castles">
+            <div class="table">
+              <% ["Gludio", "Dion", "Giran", "Oren", "Aden", "Innadril", "Goddard", "Rune", "Schuttgart", "Coming Soon"].forEach((castle, index) => { %>
+                <div class="table-row <%= index < 3 ? "table-row-top" : "" %>">
+                  <div class="table-td number"><span class="<%= index < 3 ? `n-top-${index + 1}` : "" %>"><%= index + 1 %></span></div>
+                  <div class="table-td name"><a href="/info"><%= castle %></a></div>
+                  <div class="table-td points"><%= index === 9 ? "-" : "Open" %></div>
+                </div>
+              <% }) %>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<h2>Noticias</h2>
+    <div class="discordBlock">
+      <img src="/conquer/images/discord.png" alt="Discord">
+    </div>
+  </aside>
 
-<% if (!latestNews || !latestNews.length) { %>
-  <p>No hay noticias publicadas.</p>
-<% } else { %>
-  <% latestNews.forEach((article, index) => { %>
-    <h3>
-      <a href="/news/<%= article.slug %>"><%= article.title %></a>
-    </h3>
+  <section class="news">
+    <div class="news-title">
+      Lasted <span>News</span>
+    </div>
 
-    <p><%= article.formattedDate %></p>
-    <p><%= article.summary %></p>
+    <% if (!mainNews) { %>
+      <div class="newsBlock newsBlock-empty">
+        <div class="newsBlock-title">No hay noticias publicadas.</div>
+      </div>
+    <% } else { %>
+      <% const mainDate = formatNewsDate(mainNews.publishedAt); %>
+      <article class="newsBlock" style="background-image: url('<%= newsImages[0] %>');">
+        <div class="newsBlock-date">
+          <%= mainDate.day %> <span><%= mainDate.month %></span>
+        </div>
+        <div class="newsBlock-title">
+          <a href="/news/<%= mainNews.slug %>"><%= mainNews.title %></a>
+        </div>
+        <div class="newsBlock-text">
+          <%= mainNews.summary %>
+        </div>
+        <div class="newsBlock-button">
+          <a href="/news/<%= mainNews.slug %>" class="button button-white button-small">Read More</a>
+        </div>
+      </article>
 
-    <% if (index !== latestNews.length - 1) { %>
-      <hr>
+      <div class="newsBlockFlex">
+        <% smallNews.forEach((article, index) => { %>
+          <% const cardDate = formatNewsDate(article.publishedAt); %>
+          <article class="newsBlock newsBlockSmall" style="background-image: url('<%= newsImages[index + 1] %>');">
+            <div class="newsBlock-date">
+              <%= cardDate.day %> <span><%= cardDate.month %></span>
+            </div>
+            <div class="newsBlock-title">
+              <a href="/news/<%= article.slug %>"><%= article.title %></a>
+            </div>
+            <div class="newsBlock-button">
+              <a href="/news/<%= article.slug %>" class="button button-white button-small">Read More</a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
     <% } %>
-  <% }) %>
 
-  <p><a href="/news">Ver todas</a></p>
-<% } %>
-
-<hr>
-
-<h2>Top 5 PvP</h2>
-
-<% if (!topPvp || !topPvp.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPvp.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPvp.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-
-  <p><a href="/rankings">Ver ranking PvP completo</a></p>
-<% } %>
-
-<hr>
-
-<h2>Top 5 PK</h2>
-
-<% if (!topPk || !topPk.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPk.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PK:</strong> <%= row.pkkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPk.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-
-  <p><a href="/rankings">Ver ranking PK completo</a></p>
-<% } %>
+    <a href="/news" class="show-more">Show More News</a>
+  </section>
+</div>
 
 <%- include("partials/footer") %>

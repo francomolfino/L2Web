@@ -1,24 +1,65 @@
-<nav>
-  <a href="/">Inicio</a>
-  <a href="/rankings">Rankings</a>
-  <a href="/downloads">Descargas</a>
-  <a href="/info">Información</a>
+<%
+  const navStatusOnline = typeof status !== "undefined" && status && status.online;
+  const navOnlinePlayers = typeof onlinePlayers !== "undefined" ? onlinePlayers : 0;
+%>
 
-  <% if (user) { %>
-    <a href="/account">Mi cuenta</a>
-    <a href="/change-password">Cambiar contraseña</a>
+<div class="topPanel flex-s-c">
+  <button class="btn-mobile btn-drop" type="button" aria-label="Abrir menu" data-class="topPanel-left">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
-    <form method="post" action="/logout" style="display:inline;">
-      <input type="hidden" name="_csrf" value="<%= csrfToken %>">
-      <button type="submit">Cerrar sesión</button>
-    </form>
+  <div class="topPanel-left">
+    <div class="mobile-menu">
+      <ul>
+        <li><a href="/">Home</a></li>
+        <li><a href="/register">Registration</a></li>
+        <li><a href="/downloads">Download</a></li>
+        <li><a href="/news">Community</a></li>
+        <li><a href="/rankings">Forum</a></li>
+        <li><a href="/news">Gallery</a></li>
+        <li><a href="/info">Information</a></li>
+        <li><a href="/info">Contacts</a></li>
+      </ul>
+    </div>
 
-    <span>Conectado como <strong><%= user.login %></strong></span>
-  <% } else { %>
-    <a href="/login">Iniciar sesión</a>
-    <a href="/register">Registrarse</a>
-    <a href="/forgot-password">Recuperar contraseña</a>
-  <% } %>
-</nav>
+    <nav class="menu-wrapper" aria-label="Principal">
+      <ul class="menu menu-main">
+        <li class="menu__item"><a href="/" class="menu__link">Home</a></li>
+        <li class="menu__item"><a href="/register" class="menu__link">Registration</a></li>
+        <li class="menu__item"><a href="/downloads" class="menu__link">Download</a></li>
+        <li class="menu__item"><a href="/news" class="menu__link">Community</a></li>
+        <li class="menu__item"><a href="/rankings" class="menu__link">Forum</a></li>
+        <li class="menu__item"><a href="/news" class="menu__link">Gallery</a></li>
+        <li class="menu__item"><a href="/info" class="menu__link">Information</a></li>
+        <li class="menu__item"><a href="/info" class="menu__link">Contacts</a></li>
+      </ul>
+    </nav>
 
-<hr>
+  </div>
+
+  <div class="topPanel-right">
+    <% if (user) { %>
+      <a href="/account" class="user-enter"><i class="icon icon-enter"></i> <%= user.login %></a>
+    <% } else { %>
+      <a href="/login" class="user-enter"><i class="icon icon-enter"></i> User Account</a>
+    <% } %>
+
+    <div class="online" aria-label="Estado del servidor">
+      <div class="online-flex flex-c-c">
+        <div class="online-block <%= navStatusOnline ? "online-block-active" : "" %>">
+          x1
+          <span class="<%= navStatusOnline ? "color-green" : "color-red" %>"><%= navStatusOnline ? "Online" : "Offline" %></span>
+        </div>
+      </div>
+      <div class="online-flex flex-c-c">
+        <div class="online-block">
+          <%= navOnlinePlayers %>
+          <span class="color-green">Players</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

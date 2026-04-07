@@ -1,7 +1,7 @@
 <% if (error) { %>
-  <p><strong>Error:</strong> <%= error %></p>
+  <p class="message message-error" data-flash-message><strong>Error:</strong> <%= error %></p>
 <% } %>
 
 <% if (message) { %>
-  <p><strong><%= message %></strong></p>
+  <p class="message message-success" data-flash-message><strong><%= message %></strong></p>
 <% } %>

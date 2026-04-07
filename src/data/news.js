@@ -26,5 +26,33 @@ La idea es empezar a mover la comunidad desde temprano y probar el balance gener
 Estate atento a nuevas novedades.
     `.trim(),
     publishedAt: "2026-04-06"
+  },
+  {
+    slug: "primer-evento-pvp",
+    title: "This is a small headline for a little news!",
+    summary: "Anunciamos el primer evento PvP del servidor para este fin de semana.",
+    body: `
+Este fin de semana vamos a realizar el primer evento PvP del servidor.
+
+Próximamente vamos a publicar horarios, reglas y premios.
+La idea es empezar a mover la comunidad desde temprano y probar el balance general del servidor.
+
+Estate atento a nuevas novedades.
+    `.trim(),
+    publishedAt: "2026-04-01"
+  },
+  {
+    slug: "primer-evento-pvp",
+    title: "This is a small headline for a little news!",
+    summary: "Anunciamos el primer evento PvP del servidor para este fin de semana.",
+    body: `
+Este fin de semana vamos a realizar el primer evento PvP del servidor.
+
+Próximamente vamos a publicar horarios, reglas y premios.
+La idea es empezar a mover la comunidad desde temprano y probar el balance general del servidor.
+
+Estate atento a nuevas novedades.
+    `.trim(),
+    publishedAt: "2026-03-29"
   }
 ];

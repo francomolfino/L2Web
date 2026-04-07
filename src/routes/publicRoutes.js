@@ -28,6 +28,7 @@ router.get("/", async (req, res) => {
       onlinePlayers,
       topPvp,
       topPk,
+      serverInfo,
       latestNews: formattedNews.slice(0, 3)
     });
   } catch (error) {
@@ -38,6 +39,7 @@ router.get("/", async (req, res) => {
       onlinePlayers: 0,
       topPvp: [],
       topPk: [],
+      serverInfo,
       latestNews: formattedNews.slice(0, 3)
     });
   }

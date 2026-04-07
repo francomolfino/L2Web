@@ -2,6 +2,10 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title><%= title || "L2Web" %></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title ? `${title} | L2Web` : "L2Web" %></title>
+  <link rel="stylesheet" href="/css/style.css">
 </head>
-<body>
+<body class="<%= typeof bodyClass !== "undefined" ? bodyClass : "" %>">
+  <div class="smoke" aria-hidden="true"></div>
+  <div class="wrapper">
