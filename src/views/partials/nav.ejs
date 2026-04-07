@@ -17,6 +17,11 @@
         <button type="submit">Cerrar sesión</button>
       </form>
     <% } else { %>
+      <% if (typeof status !== "undefined") { %>
+        <span class="status-pill nav-status-pill <%= status && status.online ? "status-online" : "status-offline" %>">
+          <strong><%= status && status.online ? "Online" : "Offline" %></strong>
+        </span>
+      <% } %>
       <a href="/register">REGISTRARSE</a>
       <a href="/login">INICIAR SESIÓN</a>
     <% } %>
