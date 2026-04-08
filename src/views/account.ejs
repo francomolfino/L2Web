@@ -1,44 +1,156 @@
-<%- include("partials/header", { title: "Mi cuenta" }) %>
+<%- include("partials/header", { title: "Mi cuenta", bodyClass }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Cuenta: <%= account?.login || login %></h1>
+<%
+  const accountName = account?.login || login;
+  const isServerOnline = status && status.online;
+  const characterPortraits = [
+    "/conquer/images/news-img-big_v1.jpg",
+    "/conquer/images/news-img-small_1_v1.jpg",
+    "/conquer/images/news-img-small_2_v1.jpg"
+  ];
+  const emptyCharacterSlots = Math.max(0, 6 - (characters ? characters.length : 0));
+%>
 
-<p>
-  Estado del servidor:
-  <% if (status && status.online) { %>
-    <strong>Online</strong>
-  <% } else { %>
-    <strong>Offline</strong>
-  <% } %>
-</p>
+<main class="account-dashboard" aria-label="Panel de cuenta">
+  <aside class="account-sidebar" aria-label="Menu de cuenta">
+    <div class="account-user">
+      <span class="account-user-avatar" aria-hidden="true"><%= accountName.charAt(0).toUpperCase() %></span>
+      <div>
+        <span>Cuenta</span>
+        <strong><%= accountName %></strong>
+      </div>
+    </div>
 
-<h2>Datos de la cuenta</h2>
-<p><strong>Email:</strong> <%= account?.email || "-" %></p>
-<p><strong>Fecha de creación:</strong> <%= account?.formattedCreatedTime || "-" %></p>
+    <nav class="account-links" aria-label="Secciones de cuenta">
+      <a class="account-link is-active" href="/account">Home</a>
+      <a class="account-link" href="/change-password">Cambiar contrase&ntilde;a</a>
+      <a class="account-link" href="/rankings">Rankings</a>
+      <a class="account-link" href="/downloads">Descargas</a>
+      <a class="account-link" href="/info">Informaci&oacute;n</a>
+      <form class="account-link-form" method="post" action="/logout">
+        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+        <button class="account-link account-link-button" type="submit">Salir</button>
+      </form>
+    </nav>
+  </aside>
 
-<p><a href="/change-password">Cambiar contraseña</a></p>
+  <section class="account-content">
+    <section class="account-panel account-info-panel" aria-labelledby="account-info-title">
+      <div class="account-panel-heading">
+        <h1 id="account-info-title">Informaci&oacute;n de la cuenta</h1>
+      </div>
 
-<h2>Personajes</h2>
+      <div class="account-info-grid">
+        <div class="account-info-row">
+          <span>Account</span>
+          <strong><%= accountName %></strong>
+        </div>
+        <div class="account-info-row">
+          <span>E-mail</span>
+          <strong><%= account?.email || "-" %></strong>
+        </div>
+        <div class="account-info-row">
+          <span>Creada en</span>
+          <strong><%= account?.formattedCreatedTime || "-" %></strong>
+        </div>
+        <div class="account-info-row">
+          <span>Ultimo login</span>
+          <strong><%= account?.formattedLastActive || "-" %></strong>
+        </div>
+        <div class="account-info-row">
+          <span>Servidor</span>
+          <strong class="<%= isServerOnline ? "account-status-online" : "account-status-offline" %>"><%= isServerOnline ? "Online" : "Offline" %></strong>
+        </div>
+        <div class="account-info-row">
+          <span>Personajes</span>
+          <strong><%= characters ? characters.length : 0 %></strong>
+        </div>
+      </div>
+    </section>
 
-<% if (!characters || !characters.length) { %>
-  <p>No hay personajes en esta cuenta.</p>
-<% } else { %>
-  <% characters.forEach(char => { %>
-    <hr>
-    <p><strong>Nombre:</strong> <%= char.char_name %></p>
-    <p><strong>Título:</strong> <%= char.title || "-" %></p>
-    <p><strong>Level:</strong> <%= char.level %></p>
-    <p><strong>Fecha de creación:</strong> <%= char.formattedCreateDate || "-" %></p>
-    <p><strong>Clase:</strong> <%= char.class_name %></p>
-    <p><strong>Estado:</strong> <%= char.online_label %></p>
-    <p><strong>Clan:</strong> <%= char.clan_name !== "-" ? char.clan_name : "Sin clan" %></p>
-    <p><strong>Alianza:</strong> <%= char.ally_name !== "-" ? char.ally_name : "Sin alianza" %></p>
-    <p><strong>PvP:</strong> <%= char.pvpkills %></p>
-    <p><strong>PK:</strong> <%= char.pkkills %></p>
-    <p><strong>Karma:</strong> <%= char.karma %></p>
-    <p><strong>Tiempo online:</strong> <%= char.online_time_formatted || "-" %></p>
-  <% }) %>
-<% } %>
+    <section class="account-panel account-characters" aria-labelledby="account-characters-title" data-character-tabs>
+      <div class="account-panel-heading">
+        <h2 id="account-characters-title">Personajes</h2>
+      </div>
+
+      <% if (!characters || !characters.length) { %>
+        <div class="account-empty">
+          No hay personajes en esta cuenta.
+        </div>
+      <% } else { %>
+        <div class="account-character-strip" role="tablist" aria-label="Personajes">
+          <% characters.forEach((char, index) => { %>
+            <% const portrait = characterPortraits[index % characterPortraits.length]; %>
+            <button
+              class="account-character-card <%= index === 0 ? "is-active" : "" %>"
+              type="button"
+              role="tab"
+              aria-selected="<%= index === 0 ? "true" : "false" %>"
+              aria-controls="account-character-panel-<%= index %>"
+              data-character-card="<%= index %>"
+            >
+              <span class="account-character-thumb">
+                <img src="<%= portrait %>" alt="">
+                <span>Lv <%= char.level %></span>
+              </span>
+              <strong><%= char.char_name %></strong>
+            </button>
+          <% }) %>
+
+          <% for (let slot = 0; slot < emptyCharacterSlots; slot += 1) { %>
+            <span class="account-character-slot" aria-hidden="true"></span>
+          <% } %>
+        </div>
+
+        <div class="account-character-details">
+          <% characters.forEach((char, index) => { %>
+            <%
+              const characterRows = [
+                ["Nombre", char.char_name],
+                ["Titulo", char.title || "-"],
+                ["Level", char.level],
+                ["Clase", char.class_name],
+                ["Creado en", char.formattedCreateDate || "-"],
+                ["Online", char.online_label],
+                ["PvP", char.pvpkills],
+                ["PK", char.pkkills],
+                ["Karma", char.karma],
+                ["Clan", char.clan_name !== "-" ? char.clan_name : "Sin clan"],
+                ["Alianza", char.ally_name !== "-" ? char.ally_name : "Sin alianza"],
+                ["Tiempo online", char.online_time_formatted || "-"]
+              ];
+            %>
+            <article
+              class="account-character-panel <%= index === 0 ? "is-active" : "" %>"
+              id="account-character-panel-<%= index %>"
+              role="tabpanel"
+              data-character-panel="<%= index %>"
+              <%= index === 0 ? "" : "hidden" %>
+            >
+              <div class="account-character-summary">
+                <div>
+                  <span>Personaje seleccionado</span>
+                  <h3><%= char.char_name %></h3>
+                </div>
+                <strong class="<%= Number(char.online) === 1 ? "account-status-online" : "account-status-offline" %>"><%= char.online_label %></strong>
+              </div>
+
+              <div class="account-character-grid">
+                <% characterRows.forEach(([label, value]) => { %>
+                  <div class="account-character-row">
+                    <span><%= label %></span>
+                    <strong><%= value %></strong>
+                  </div>
+                <% }) %>
+              </div>
+            </article>
+          <% }) %>
+        </div>
+      <% } %>
+    </section>
+  </section>
+</main>
 
 <%- include("partials/footer") %>

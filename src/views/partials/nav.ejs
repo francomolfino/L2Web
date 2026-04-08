@@ -16,11 +16,7 @@
         <li><a href="/">Home</a></li>
         <li><a href="/register">Registration</a></li>
         <li><a href="/downloads">Download</a></li>
-        <li><a href="/news">Community</a></li>
-        <li><a href="/rankings">Forum</a></li>
-        <li><a href="/news">Gallery</a></li>
         <li><a href="/info">Information</a></li>
-        <li><a href="/info">Contacts</a></li>
       </ul>
     </div>
 
@@ -29,11 +25,7 @@
         <li class="menu__item"><a href="/" class="menu__link">Home</a></li>
         <li class="menu__item"><a href="/register" class="menu__link">Registration</a></li>
         <li class="menu__item"><a href="/downloads" class="menu__link">Download</a></li>
-        <li class="menu__item"><a href="/news" class="menu__link">Community</a></li>
-        <li class="menu__item"><a href="/rankings" class="menu__link">Forum</a></li>
-        <li class="menu__item"><a href="/news" class="menu__link">Gallery</a></li>
         <li class="menu__item"><a href="/info" class="menu__link">Information</a></li>
-        <li class="menu__item"><a href="/info" class="menu__link">Contacts</a></li>
       </ul>
     </nav>
 
@@ -41,7 +33,13 @@
 
   <div class="topPanel-right">
     <% if (user) { %>
-      <a href="/account" class="user-enter"><i class="icon icon-enter"></i> <%= user.login %></a>
+      <div class="account-actions">
+        <a href="/account" class="user-enter"><i class="icon icon-enter"></i> <%= user.login %></a>
+        <form class="logout-form" method="post" action="/logout">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+          <button class="logout-button" type="submit">Cerrar sesi&oacute;n</button>
+        </form>
+      </div>
     <% } else { %>
       <a href="/login" class="user-enter"><i class="icon icon-enter"></i> User Account</a>
     <% } %>
@@ -62,4 +60,3 @@
     </div>
   </div>
 </div>
-

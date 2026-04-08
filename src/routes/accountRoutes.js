@@ -12,6 +12,28 @@ import { formatDate, formatDateTime } from "../utils/dateUtils.js";
 
 const router = Router();
 
+function formatLastActive(lastActive) {
+  const timestamp = Number(lastActive);
+
+  if (!timestamp || !Number.isFinite(timestamp)) {
+    return "-";
+  }
+
+  const date = new Date(timestamp > 9999999999 ? timestamp : timestamp * 1000);
+
+  if (Number.isNaN(date.getTime())) {
+    return "-";
+  }
+
+  return new Intl.DateTimeFormat("es-AR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(date);
+}
+
 router.get("/account", requireAuth, async (req, res) => {
   try {
     const login = req.session.user.login;
@@ -19,7 +41,8 @@ router.get("/account", requireAuth, async (req, res) => {
     const account = accountRaw
       ? {
           ...accountRaw,
-          formattedCreatedTime: formatDate(accountRaw.created_time)
+          formattedCreatedTime: formatDate(accountRaw.created_time),
+          formattedLastActive: formatLastActive(accountRaw.lastactive)
         }
       : null;
     const charactersRaw = await getCharactersByAccount(login);
@@ -30,6 +53,7 @@ router.get("/account", requireAuth, async (req, res) => {
     const status = await getServerStatus();
 
     return res.render("account", {
+      bodyClass: "account-page",
       login,
       account,
       characters: characters || [],
