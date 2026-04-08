@@ -1,26 +1,37 @@
-<%- include("partials/header", { title: "Descargas" }) %>
+<%- include("partials/header", { title: "Descargas", bodyClass: "content-page" }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Descargas</h1>
+<%
+  const downloadItems = [
+    downloads.client,
+    downloads.patch,
+    downloads.updater
+  ];
+%>
 
-<p>Desde esta sección podés descargar los archivos necesarios para jugar.</p>
+<main class="content-showcase downloads-showcase" aria-label="Descargas">
+  <section class="content-hero-panel" aria-labelledby="downloads-title">
+    <h1 id="downloads-title">Archivos para entrar al servidor</h1>
+    <p>Descarg&aacute; el cliente, el patch y el updater desde un solo lugar.</p>
+  </section>
 
-<h2>Archivos disponibles</h2>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="downloads-files-title">
+    <div class="account-panel-heading">
+      <h2 id="downloads-files-title">Archivos disponibles</h2>
+    </div>
 
-<ul>
-  <li>
-    <strong><%= downloads.client.label %>:</strong>
-    <a href="<%= downloads.client.url %>"><%= downloads.client.url %></a>
-  </li>
-  <li>
-    <strong><%= downloads.patch.label %>:</strong>
-    <a href="<%= downloads.patch.url %>"><%= downloads.patch.url %></a>
-  </li>
-  <li>
-    <strong><%= downloads.updater.label %>:</strong>
-    <a href="<%= downloads.updater.url %>"><%= downloads.updater.url %></a>
-  </li>
-</ul>
+    <div class="download-grid download-grid-large">
+      <% downloadItems.forEach((item) => { %>
+        <article class="download-card">
+          <span>Archivo disponible</span>
+          <h3><%= item.label %></h3>
+          <a href="<%= item.url %>" class="download-url"><%= item.url %></a>
+          <a href="<%= item.url %>" class="button button-small">Descargar</a>
+        </article>
+      <% }) %>
+    </div>
+  </section>
+</main>
 
 <%- include("partials/footer") %>

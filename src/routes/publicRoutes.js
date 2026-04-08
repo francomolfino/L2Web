@@ -64,6 +64,10 @@ router.get("/rankings", async (req, res) => {
   }
 });
 
+router.get(["/download", "/donwload"], (req, res) => {
+  return res.redirect("/downloads");
+});
+
 router.get("/downloads", (req, res) => {
   return res.render("downloads", {
     downloads: serverInfo.downloads

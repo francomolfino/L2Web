@@ -1147,6 +1147,185 @@ form > div {
   text-align: center;
 }
 
+.content-showcase {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  max-width: 1110px;
+  margin: 0 auto 80px;
+  padding: 10px 0 40px;
+}
+
+.content-hero-panel {
+  min-height: 220px;
+  margin-bottom: 24px;
+  padding: 40px;
+  border: 1px solid rgba(251, 209, 129, 0.28);
+  border-radius: 8px;
+  background:
+    linear-gradient(90deg, rgba(21, 19, 27, 0.94), rgba(21, 19, 27, 0.46));
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+.info-showcase .content-hero-panel {
+  background:
+    linear-gradient(90deg, rgba(21, 19, 27, 0.92), rgba(21, 19, 27, 0.5));
+}
+
+.content-kicker {
+  margin-bottom: 12px;
+  color: #8e94a3;
+  font-family: "DINNextW1G", Arial, sans-serif;
+  font-size: 14px;
+  text-transform: uppercase;
+}
+
+.content-hero-panel h1 {
+  max-width: 720px;
+  margin-bottom: 18px;
+  color: #fbd181;
+  font-size: 42px;
+}
+
+.content-hero-panel p {
+  max-width: 620px;
+  margin-bottom: 0;
+  color: #c5c2d5;
+  font-family: "DINNextW1G", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.content-hero-panel p span {
+  color: #fbd181;
+}
+
+.content-panel {
+  margin-bottom: 20px;
+}
+
+.content-panel:last-child {
+  margin-bottom: 0;
+}
+
+.content-panel-large {
+  margin-bottom: 24px;
+}
+
+.content-panel-intro {
+  padding: 16px 16px 0;
+  color: #c5c2d5;
+  font-family: "DINNextW1G", Arial, sans-serif;
+  line-height: 1.5;
+}
+
+.content-panel-intro p {
+  margin-bottom: 0;
+}
+
+.download-grid,
+.info-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px;
+}
+
+.download-grid-large,
+.info-card-grid-large {
+  gap: 20px;
+  padding: 22px;
+}
+
+.download-card,
+.info-stat-card {
+  min-width: 0;
+  border: 1px solid rgba(251, 209, 129, 0.2);
+  border-radius: 8px;
+  background: rgba(30, 28, 38, 0.78);
+}
+
+.download-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-height: 260px;
+  padding: 24px;
+}
+
+.download-card span,
+.info-stat-card span {
+  color: #8e94a3;
+  font-family: "DINNextW1G", Arial, sans-serif;
+  font-size: 13px;
+  text-transform: uppercase;
+}
+
+.download-card h2,
+.download-card h3 {
+  margin: 12px 0 16px;
+  color: #fbd181;
+  font-size: 24px;
+}
+
+.download-url {
+  display: block;
+  overflow: hidden;
+  max-width: 100%;
+  margin-bottom: auto;
+  color: #c5c2d5;
+  font-family: "DINNextW1G", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.download-card .button {
+  margin-top: 24px;
+}
+
+.info-settings-grid {
+  padding: 22px;
+}
+
+.info-summary-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.info-stat-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 120px;
+  padding: 22px;
+  text-align: center;
+}
+
+.info-stat-card strong {
+  display: block;
+  margin-top: 10px;
+  color: #fbd181;
+  font-size: 34px;
+}
+
+.info-extra-list {
+  padding: 16px;
+  font-family: "DINNextW1G", Arial, sans-serif;
+}
+
+.info-extra-list li {
+  margin-bottom: 10px;
+  padding: 13px 14px;
+  border: 1px solid rgba(251, 209, 129, 0.14);
+  border-radius: 6px;
+  background: rgba(30, 28, 38, 0.78);
+  color: #c5c2d5;
+}
+
+.info-extra-list li:last-child {
+  margin-bottom: 0;
+}
+
 .footer {
   display: flex;
   padding: 80px 0;
@@ -1630,6 +1809,25 @@ form > div {
     grid-template-columns: 1fr;
   }
 
+  .download-grid,
+  .info-card-grid,
+  .info-summary-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-showcase {
+    margin-top: 20px;
+  }
+
+  .content-hero-panel {
+    min-height: 200px;
+    padding: 30px;
+  }
+
+  .content-hero-panel h1 {
+    font-size: 34px;
+  }
+
   .account-character-strip {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1695,8 +1893,39 @@ form > div {
   .account-info-grid,
   .account-character-grid,
   .account-character-strip,
-  .account-character-details {
+  .account-character-details,
+  .download-grid,
+  .info-card-grid,
+  .info-settings-grid,
+  .info-extra-list {
     padding: 12px;
+  }
+
+  .content-showcase {
+    margin-bottom: 45px;
+    padding-bottom: 10px;
+  }
+
+  .content-hero-panel {
+    min-height: 170px;
+    padding: 24px 18px;
+  }
+
+  .content-hero-panel h1 {
+    font-size: 28px;
+  }
+
+  .download-card {
+    min-height: 190px;
+    padding: 16px;
+  }
+
+  .info-stat-card {
+    min-height: 100px;
+  }
+
+  .info-stat-card strong {
+    font-size: 28px;
   }
 
   .account-character-summary {

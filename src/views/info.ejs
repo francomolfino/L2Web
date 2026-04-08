@@ -1,48 +1,81 @@
-<%- include("partials/header", { title: "Información del servidor" }) %>
+<%- include("partials/header", { title: "Informacion del servidor", bodyClass: "content-page" }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Información del servidor</h1>
+<%
+  const rateRows = [
+    ["EXP", `x${serverInfo.rates.exp}`],
+    ["SP", `x${serverInfo.rates.sp}`],
+    ["Adena", `x${serverInfo.rates.adena}`],
+    ["Drop", `x${serverInfo.rates.drop}`],
+    ["Spoil", `x${serverInfo.rates.spoil}`],
+    ["Quest", `x${serverInfo.rates.quest}`]
+  ];
+  const settingRows = [
+    ["Max enchant weapon", serverInfo.settings.maxEnchantWeapon],
+    ["Max enchant armor", serverInfo.settings.maxEnchantArmor],
+    ["Max enchant jewelry", serverInfo.settings.maxEnchantJewelry],
+    ["Safe enchant weapon", serverInfo.settings.safeEnchantWeapon],
+    ["Safe enchant armor", serverInfo.settings.safeEnchantArmor],
+    ["Safe enchant jewelry", serverInfo.settings.safeEnchantJewelry],
+    ["Auto learn skills", serverInfo.settings.autoLearnSkills ? "Si" : "No"],
+    ["Subclass sin quest", serverInfo.settings.subclassWithoutQuest ? "Si" : "No"],
+    ["Buffer habilitado", serverInfo.settings.bufferEnabled ? "Si" : "No"],
+    ["GM Shop habilitado", serverInfo.settings.gmShopEnabled ? "Si" : "No"]
+  ];
+%>
 
-<h2>General</h2>
-<p><strong>Nombre:</strong> <%= serverInfo.name %></p>
-<p><strong>Crónica:</strong> <%= serverInfo.chronicle %></p>
+<main class="content-showcase info-showcase" aria-label="Informacion del servidor">
+  <section class="content-hero-panel" aria-labelledby="info-title">
+    <h1 id="info-title">Informaci&oacute;n del servidor</h1>
+    <p><%= serverInfo.name %> <span><%= serverInfo.chronicle %></span></p>
+  </section>
 
-<hr>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="rates-title">
+    <div class="account-panel-heading">
+      <h2 id="rates-title">Rates</h2>
+    </div>
 
-<h2>Rates</h2>
-<p><strong>EXP:</strong> x<%= serverInfo.rates.exp %></p>
-<p><strong>SP:</strong> x<%= serverInfo.rates.sp %></p>
-<p><strong>Adena:</strong> x<%= serverInfo.rates.adena %></p>
-<p><strong>Drop:</strong> x<%= serverInfo.rates.drop %></p>
-<p><strong>Spoil:</strong> x<%= serverInfo.rates.spoil %></p>
-<p><strong>Quest:</strong> x<%= serverInfo.rates.quest %></p>
+    <div class="info-card-grid info-card-grid-large">
+      <% rateRows.forEach(([label, value]) => { %>
+        <div class="info-stat-card">
+          <span><%= label %></span>
+          <strong><%= value %></strong>
+        </div>
+      <% }) %>
+    </div>
+  </section>
 
-<hr>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="settings-title">
+    <div class="account-panel-heading">
+      <h2 id="settings-title">Configuraci&oacute;n</h2>
+    </div>
 
-<h2>Configuración</h2>
-<p><strong>Max enchant weapon:</strong> <%= serverInfo.settings.maxEnchantWeapon %></p>
-<p><strong>Max enchant armor:</strong> <%= serverInfo.settings.maxEnchantArmor %></p>
-<p><strong>Max enchant jewelry:</strong> <%= serverInfo.settings.maxEnchantJewelry %></p>
-<p><strong>Safe enchant weapon:</strong> <%= serverInfo.settings.safeEnchantWeapon %></p>
-<p><strong>Safe enchant armor:</strong> <%= serverInfo.settings.safeEnchantArmor %></p>
-<p><strong>Safe enchant jewelry:</strong> <%= serverInfo.settings.safeEnchantJewelry %></p>
-<p><strong>Auto learn skills:</strong> <%= serverInfo.settings.autoLearnSkills ? "Sí" : "No" %></p>
-<p><strong>Subclass sin quest:</strong> <%= serverInfo.settings.subclassWithoutQuest ? "Sí" : "No" %></p>
-<p><strong>Buffer habilitado:</strong> <%= serverInfo.settings.bufferEnabled ? "Sí" : "No" %></p>
-<p><strong>GM Shop habilitado:</strong> <%= serverInfo.settings.gmShopEnabled ? "Sí" : "No" %></p>
+    <div class="account-character-grid info-settings-grid">
+      <% settingRows.forEach(([label, value]) => { %>
+        <div class="account-character-row">
+          <span><%= label %></span>
+          <strong><%= value %></strong>
+        </div>
+      <% }) %>
+    </div>
+  </section>
 
-<hr>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="extra-title">
+    <div class="account-panel-heading">
+      <h2 id="extra-title">Informaci&oacute;n adicional</h2>
+    </div>
 
-<h2>Información adicional</h2>
-<% if (!serverInfo.extra || !serverInfo.extra.length) { %>
-  <p>No hay información adicional.</p>
-<% } else { %>
-  <ul>
-    <% serverInfo.extra.forEach(item => { %>
-      <li><%= item %></li>
-    <% }) %>
-  </ul>
-<% } %>
+    <% if (!serverInfo.extra || !serverInfo.extra.length) { %>
+      <div class="account-empty">No hay informaci&oacute;n adicional.</div>
+    <% } else { %>
+      <ul class="info-extra-list">
+        <% serverInfo.extra.forEach(item => { %>
+          <li><%= item %></li>
+        <% }) %>
+      </ul>
+    <% } %>
+  </section>
+</main>
 
 <%- include("partials/footer") %>
