@@ -1,26 +1,37 @@
-<%- include("partials/header", { title: "Noticias" }) %>
+<%- include("partials/header", { title: "Noticias", bodyClass: "content-page" }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Noticias</h1>
+<main class="content-showcase news-showcase" aria-label="Noticias">
+  <section class="content-hero-panel" aria-labelledby="news-title">
+    <h1 id="news-title">Noticias</h1>
+    <p>Actualizaciones, anuncios y novedades del servidor.</p>
+  </section>
 
-<% if (!newsList || !newsList.length) { %>
-  <p>No hay noticias publicadas.</p>
-<% } else { %>
-  <% newsList.forEach((article, index) => { %>
-    <h2>
-      <a href="/news/<%= article.slug %>"><%= article.title %></a>
-    </h2>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="news-list-title">
+    <div class="account-panel-heading">
+      <h2 id="news-list-title">Ultimas noticias</h2>
+    </div>
 
-    <p><%= article.formattedDate %></p>
-    <p><%= article.summary %></p>
-
-    <% if (index !== newsList.length - 1) { %>
-      <hr>
+    <% if (!newsList || !newsList.length) { %>
+      <div class="account-empty">No hay noticias publicadas.</div>
+    <% } else { %>
+      <div class="public-news-grid">
+        <% newsList.forEach((article, index) => { %>
+          <article class="public-news-card">
+            <a class="public-news-image" href="/news/<%= article.slug %>" style="background-image: url('/conquer/images/news-img-small_<%= (index % 2) + 1 %>_v1.jpg');">
+              <span><%= article.formattedDate %></span>
+            </a>
+            <div class="public-news-content">
+              <h3><a href="/news/<%= article.slug %>"><%= article.title %></a></h3>
+              <p><%= article.summary %></p>
+              <a href="/news/<%= article.slug %>" class="button button-small">Leer mas</a>
+            </div>
+          </article>
+        <% }) %>
+      </div>
     <% } %>
-  <% }) %>
-<% } %>
-
-<p><a href="/">Volver al inicio</a></p>
+  </section>
+</main>
 
 <%- include("partials/footer") %>

@@ -1,57 +1,74 @@
-<%- include("partials/header", { title: "Rankings" }) %>
+<%- include("partials/header", { title: "Rankings", bodyClass: "content-page" }) %>
 <%- include("partials/nav") %>
 <%- include("partials/messages") %>
 
-<h1>Rankings</h1>
+<main class="content-showcase rankings-showcase" aria-label="Rankings">
+  <section class="content-hero-panel" aria-labelledby="rankings-title">
+    <h1 id="rankings-title">Rankings</h1>
+    <p>Los mejores personajes del servidor ordenados por PvP y PK.</p>
+  </section>
 
-<p><a href="/">Volver al inicio</a></p>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="ranking-pvp-title">
+    <div class="account-panel-heading">
+      <h2 id="ranking-pvp-title">Ranking PvP</h2>
+    </div>
 
-<hr>
+    <% if (!topPvp || !topPvp.length) { %>
+      <div class="account-empty">No hay datos.</div>
+    <% } else { %>
+      <div class="ranking-table" role="table" aria-label="Ranking PvP">
+        <div class="ranking-row ranking-row-head" role="row">
+          <span>#</span>
+          <span>Nombre</span>
+          <span>Clase</span>
+          <span>Level</span>
+          <span>PvP</span>
+          <span>Clan</span>
+        </div>
+        <% topPvp.forEach((row, index) => { %>
+          <div class="ranking-row" role="row">
+            <span class="ranking-position"><%= index + 1 %></span>
+            <strong><%= row.char_name %></strong>
+            <span><%= row.class_name %></span>
+            <span><%= row.level %></span>
+            <strong class="ranking-points"><%= row.pvpkills %></strong>
+            <span><%= row.clan_name %></span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
 
-<h2>Ranking PvP</h2>
+  <section class="account-panel content-panel content-panel-large" aria-labelledby="ranking-pk-title">
+    <div class="account-panel-heading">
+      <h2 id="ranking-pk-title">Ranking PK</h2>
+    </div>
 
-<% if (!topPvp || !topPvp.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPvp.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PvP:</strong> <%= row.pvpkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPvp.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-<% } %>
-
-<hr>
-
-<h2>Ranking PK</h2>
-
-<% if (!topPk || !topPk.length) { %>
-  <p>No hay datos.</p>
-<% } else { %>
-  <ol>
-    <% topPk.forEach((row, index) => { %>
-      <li>
-        <p><strong>Nombre:</strong> <%= row.char_name %></p>
-        <p><strong>Clase:</strong> <%= row.class_name %></p>
-        <p><strong>Level:</strong> <%= row.level %></p>
-        <p><strong>PK:</strong> <%= row.pkkills %></p>
-        <p><strong>Clan:</strong> <%= row.clan_name %></p>
-      </li>
-
-      <% if (index !== topPk.length - 1) { %>
-        <hr>
-      <% } %>
-    <% }) %>
-  </ol>
-<% } %>
+    <% if (!topPk || !topPk.length) { %>
+      <div class="account-empty">No hay datos.</div>
+    <% } else { %>
+      <div class="ranking-table" role="table" aria-label="Ranking PK">
+        <div class="ranking-row ranking-row-head" role="row">
+          <span>#</span>
+          <span>Nombre</span>
+          <span>Clase</span>
+          <span>Level</span>
+          <span>PK</span>
+          <span>Clan</span>
+        </div>
+        <% topPk.forEach((row, index) => { %>
+          <div class="ranking-row" role="row">
+            <span class="ranking-position"><%= index + 1 %></span>
+            <strong><%= row.char_name %></strong>
+            <span><%= row.class_name %></span>
+            <span><%= row.level %></span>
+            <strong class="ranking-points"><%= row.pkkills %></strong>
+            <span><%= row.clan_name %></span>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </section>
+</main>
 
 <%- include("partials/footer") %>
